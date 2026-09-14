@@ -1,5 +1,6 @@
 using Framework.Core.Interfaces;
 using Game.Shared.Character;
+using Presentation.Player;
 using UnityEngine;
 
 namespace Framework.Core.Patterns
@@ -14,13 +15,16 @@ namespace Framework.Core.Patterns
         protected readonly ICharacter _character;
         protected readonly CharacterStateMachine _stateMachine;
 
+        protected readonly PlayerView _view;
+
         ///<summary>
         /// コンストラクタ
         /// </summary>
-        protected CharacterState(ICharacter character, CharacterStateMachine stateMachine)
+        protected CharacterState(ICharacter character, CharacterStateMachine stateMachine,PlayerView view)
         {
             _character = character;
             _stateMachine = stateMachine;
+            _view = view;
         }
 
         ///<summary>
@@ -58,7 +62,7 @@ namespace Framework.Core.Patterns
         /// </summary>
         protected void ChangeState<T>() where T : CharacterState
         {
-            _stateMachine.CHangeState<T>();
+            _stateMachine.ChangeState<T>();
         }
 
     }

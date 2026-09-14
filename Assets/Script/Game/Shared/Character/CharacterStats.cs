@@ -39,7 +39,8 @@ namespace Game.Shared.Character
         {
             return new CharacterStats
             {
-                MaxHP = MaxHP,           
+                MaxHP = MaxHP,
+                CurrentHP = CurrentHP,           
                 MoveSpeed = MoveSpeed,
                 Acceleration = Acceleration,
                 Deceleration = Deceleration,  

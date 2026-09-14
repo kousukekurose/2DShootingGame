@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Framework.Core.Interface 
+namespace Framework.Core.Interfaces
 {
     /// <summary>
     /// 移動可能なオブジェクトのインターフェース
@@ -12,7 +12,7 @@ namespace Framework.Core.Interface
         /// 指定された方向に移動する
         /// </summary>
         /// <param name="direction">移動方向(正規化されていること)</param>
-        void Move(Vector3 direction);
+        void Move(Vector3 direction,float deltaTime);
 
         ///<summary>
         /// 現在の位置を取得する

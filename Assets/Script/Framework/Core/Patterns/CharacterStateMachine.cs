@@ -37,7 +37,7 @@ namespace Framework.Core.Patterns
         public void RegisterState<T>(T state) where T : CharacterState
         {
             var stateType = typeof(T);
-            if(!_states.ContainsKey(stateType))
+            if(_states.ContainsKey(stateType))
             {
                 UnityEngine.Debug.LogError($"State{stateType.Name} is not registered");
                 return;
@@ -48,7 +48,7 @@ namespace Framework.Core.Patterns
         ///<summary>
         /// 指定したステートに遷移する
         /// </summary>
-        public void CHangeState<T>() where T : CharacterState
+        public void ChangeState<T>() where T : CharacterState
         {
             var newStateType = typeof(T);
 

@@ -1,4 +1,3 @@
-using UnityEngine;
 
 namespace Framework.Core.Interfaces
 {
@@ -28,7 +27,7 @@ namespace Framework.Core.Interfaces
         /// 無敵状態かどうか
         /// 無敵中はダメージを受けない
         /// </summary>
-        bool IsInvinvible{get;}
+        bool IsInvincible{get;}
 
         ///<summary>
         /// ダメージを受ける
@@ -40,14 +39,8 @@ namespace Framework.Core.Interfaces
         ///<summary>
         /// 回復する
         /// </summary>
-        /// <param name="amout">回復量</param>
-        void Heal(float amout);
-
-        ///<summary>
-        /// 無敵状態を設定
-        /// </summary>
-        /// <param name="duration">無敵時間</param>
-        void SetInvincible(float duration);
+        /// <param name="amount">回復量</param>
+        void Heal(float amount);
     }
 
     /// <summary>
