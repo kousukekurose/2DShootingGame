@@ -18,7 +18,6 @@ namespace Application.Player
         {
             if(!_player.CanAttack) return;
             _player.Attack(targetPosition);
-            //_playerView.PlayAnimation("Attack");
         }
     }
 }

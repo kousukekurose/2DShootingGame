@@ -81,7 +81,6 @@ namespace Application.Player
 
         private void OnPlayerDeath()
         {
-            //_playerView.PlayAnimation("Death");
             _playerView.SetVisible(false);
         }
 

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System;
 using Framework.Core.Interfaces;
-using Unity.VisualScripting;
 
 namespace Framework.Core.Patterns
 {
@@ -39,7 +38,7 @@ namespace Framework.Core.Patterns
             var stateType = typeof(T);
             if(_states.ContainsKey(stateType))
             {
-                UnityEngine.Debug.LogError($"State{stateType.Name} is not registered");
+                CustomLogger.LogError($"State{stateType.Name} is not registered");
                 return;
             }
             _states[stateType] = state;
@@ -54,7 +53,7 @@ namespace Framework.Core.Patterns
 
             if(!_states.ContainsKey(newStateType))
             {
-                UnityEngine.Debug.LogError($"State{newStateType.Name} is not registered");
+                CustomLogger.LogError($"State{newStateType.Name} is not registered");
                 return;
             }
 
@@ -73,7 +72,7 @@ namespace Framework.Core.Patterns
             //新しいステートのEnterを呼ぶ
             _currentState?.Enter();
 
-            UnityEngine.Debug.Log($"State change to {newStateType.Name}");
+            CustomLogger.Log($"State change to {newStateType.Name}");
         }
 
         ///<summary>

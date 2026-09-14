@@ -24,18 +24,18 @@ namespace Presentation.Player
             _moveUseCase = moveUseCase;
             _attackUseCase = attackUseCase;
             _damageUseCase = damageUseCase;
-            Debug.Log("[PlayerInputReceiver] Initialize called - UseCases assigned");
+            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] Initialize called - UseCases assigned");
         }
 
         private void OnEnable()
         {
-            Debug.Log("[PlayerInputReceiver] OnEnable called - Creating InputSystem_Actions");
+            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] OnEnable called - Creating InputSystem_Actions");
             _input = new InputSystem_Actions();
             _input.Enable();
-            Debug.Log("[PlayerInputReceiver] InputSystem_Actions enabled");
+            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] InputSystem_Actions enabled");
 
             _input.Player.Attack.started += OnAttackStarted;
-            Debug.Log("[PlayerInputReceiver] Attack event subscribed");
+            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] Attack event subscribed");
         }
 
         private void OnDisable()

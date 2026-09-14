@@ -71,27 +71,27 @@ namespace Framework.Core.DI
 
         public void Start()
         {
-            Debug.Log("[GamePlayerInitializer] Start called");
+            CustomLogger.Log("[GamePlayerInitializer] Start called");
             _playerView.InitializePlayer(_player);
             
-            Debug.Log("[GamePlayerInitializer] Initializing PlayerInputReceiver");
+            CustomLogger.Log("[GamePlayerInitializer] Initializing PlayerInputReceiver");
             _inputReceiver.Initialize(_moveUseCase, _attackUseCase, _damageUseCase);
             
-            Debug.Log("[GamePlayerInitializer] Creating states...");
+            CustomLogger.Log("[GamePlayerInitializer] Creating states...");
             var idleState = new Game.Player.PlayerState.PlayerIdleState(_player, _player.StateMachine,_publisher);
             var moveState = new Game.Player.PlayerState.PlayerMoveState(_player, _player.StateMachine,_publisher);
             var attackState = new Game.Player.PlayerState.PlayerAttackState(_player, _player.StateMachine,_publisher);
             var damageState = new Game.Player.PlayerState.PlayerDamageState(_player, _player.StateMachine,_publisher);
             var deathState = new Game.Player.PlayerState.PlayerDeathState(_player, _player.StateMachine,_publisher);
             
-            Debug.Log("[GamePlayerInitializer] Registering states...");
+            CustomLogger.Log("[GamePlayerInitializer] Registering states...");
             _player.StateMachine.RegisterState(idleState);
             _player.StateMachine.RegisterState(moveState);
             _player.StateMachine.RegisterState(attackState);
             _player.StateMachine.RegisterState(damageState);
             _player.StateMachine.RegisterState(deathState);
             
-            Debug.Log("[GamePlayerInitializer] Changing to IdleState");
+            CustomLogger.Log("[GamePlayerInitializer] Changing to IdleState");
             _player.StateMachine.ChangeState<Game.Player.PlayerState.PlayerIdleState>();
         }
 

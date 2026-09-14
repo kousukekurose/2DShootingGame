@@ -33,7 +33,7 @@ namespace Presentation.Player
             _subscriber = subscribe;
             _disposable = subscribe.Subscribe(stateEvent =>
             {
-                Debug.Log("アニメーション再生");
+                Framework.Core.CustomLogger.Log("アニメーション再生");
                 //PlayAnimation(stateEvent.StateName);
             });
         }

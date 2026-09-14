@@ -16,16 +16,16 @@ namespace Application.Player
 
         public void Move(Vector3 direction)
         {
-            Debug.Log($"[PlayerMoveUseCase] Move called with direction: {direction}");
+            Framework.Core.CustomLogger.Log($"[PlayerMoveUseCase] Move called with direction: {direction}");
             
             if(!_player.IsActive)
             {
-                Debug.Log("[PlayerMoveUseCase] Player is not active, skipping move");
+                Framework.Core.CustomLogger.Log("[PlayerMoveUseCase] Player is not active, skipping move");
                 return;
             }
             _player.SetInputDirection(direction);
             
-            Debug.Log("[PlayerMoveUseCase] Player is active, calling Player.Move");
+            Framework.Core.CustomLogger.Log("[PlayerMoveUseCase] Player is active, calling Player.Move");
             _player.Move(direction, Time.deltaTime);
             
             _playerView.UpdatePositionFromPhysics();

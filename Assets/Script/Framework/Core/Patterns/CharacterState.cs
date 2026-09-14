@@ -1,7 +1,5 @@
 using Framework.Core.Interfaces;
-using Game.Shared.Character;
 using Presentation.Player;
-using UnityEngine;
 
 namespace Framework.Core.Patterns
 {

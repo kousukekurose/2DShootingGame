@@ -1,5 +1,4 @@
 
-using UnityEngine;
 using MessagePipe;
 
 namespace Game.Player.PlayerState
