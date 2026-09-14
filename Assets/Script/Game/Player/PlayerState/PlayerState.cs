@@ -1,27 +1,31 @@
 
 using UnityEngine;
+using MessagePipe;
 
 namespace Game.Player.PlayerState
 {
     public abstract class PlayerState : Framework.Core.Patterns.CharacterState
     {
         protected readonly Player _player;
-        protected readonly Application.Player.PlayerMoveUseCase _moveUseCase;
-        protected readonly Application.Player.PlayerAttackUseCase _attackUseCase;
-        protected readonly new Presentation.Player.PlayerView _view;
+        protected readonly IPublisher<Framework.Core.Events.PlayerStateChangedEvent> _stateChangedPublisher;
 
         protected PlayerState(
             Player player,
             Framework.Core.Patterns.CharacterStateMachine stateMachine,
-            Application.Player.PlayerMoveUseCase moveUseCase,
-            Application.Player.PlayerAttackUseCase attackUseCase,
-            Presentation.Player.PlayerView view
-        ): base(player,stateMachine,view)
+            IPublisher<Framework.Core.Events.PlayerStateChangedEvent> stateChangedPublisher
+            )
+            : base(player,stateMachine)
         {
             _player = player;
-            _moveUseCase = moveUseCase;
-            _attackUseCase = attackUseCase;
-            _view = view;
+            _stateChangedPublisher = stateChangedPublisher;
+        }
+
+        protected void PublishStateChanged(string stateName)
+        {
+            _stateChangedPublisher.Publish(new Framework.Core.Events.PlayerStateChangedEvent 
+            { 
+                StateName = stateName 
+            });
         }
     }
 }

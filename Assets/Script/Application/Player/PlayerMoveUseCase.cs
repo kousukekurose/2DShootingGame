@@ -23,11 +23,10 @@ namespace Application.Player
                 Debug.Log("[PlayerMoveUseCase] Player is not active, skipping move");
                 return;
             }
+            _player.SetInputDirection(direction);
             
             Debug.Log("[PlayerMoveUseCase] Player is active, calling Player.Move");
             _player.Move(direction, Time.deltaTime);
-            
-            Debug.Log($"[PlayerMoveUseCase] Player position after move: {_player.GetCurrentPosition()}");
             
             _playerView.UpdatePositionFromPhysics();
         }

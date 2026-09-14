@@ -1,6 +1,7 @@
 using VContainer;
 using VContainer.Unity;
 using UnityEngine;
+using MessagePipe;
 
 namespace Framework.Core.DI
 {
@@ -11,6 +12,7 @@ namespace Framework.Core.DI
         [SerializeField] private Presentation.Player.PlayerInputReceiver playerInputReceiver;
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterMessagePipe(options =>{});
             builder.RegisterComponent(playerView);
             builder.RegisterComponent(playerInputReceiver);
 
@@ -29,11 +31,11 @@ namespace Framework.Core.DI
             builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerDamageUseCase>(Lifetime.Singleton);
 
-            builder.Register<Game.Player.PlayerState.PlayerIdleState>(Lifetime.Singleton);
-            builder.Register<Game.Player.PlayerState.PlayerMoveState>(Lifetime.Singleton);
-            builder.Register<Game.Player.PlayerState.PlayerAttackState>(Lifetime.Singleton);
-            builder.Register<Game.Player.PlayerState.PlayerDamageState>(Lifetime.Singleton);
-            builder.Register<Game.Player.PlayerState.PlayerDeathState>(Lifetime.Singleton);
+            // builder.Register<Game.Player.PlayerState.PlayerIdleState>(Lifetime.Singleton);
+            // builder.Register<Game.Player.PlayerState.PlayerMoveState>(Lifetime.Singleton);
+            // builder.Register<Game.Player.PlayerState.PlayerAttackState>(Lifetime.Singleton);
+            // builder.Register<Game.Player.PlayerState.PlayerDamageState>(Lifetime.Singleton);
+            // builder.Register<Game.Player.PlayerState.PlayerDeathState>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<GamePlayerInitializer>();
         }
@@ -47,14 +49,15 @@ namespace Framework.Core.DI
         private readonly Application.Player.PlayerAttackUseCase _attackUseCase;
         private readonly Application.Player.PlayerDamageUseCase _damageUseCase;
         private readonly Presentation.Player.PlayerInputReceiver _inputReceiver;
-
+        private readonly IPublisher<Events.PlayerStateChangedEvent> _publisher;
         public GamePlayerInitializer(
             Game.Player.Player player,
             Presentation.Player.PlayerView playerView,
             Application.Player.PlayerMoveUseCase moveUseCase,
             Application.Player.PlayerAttackUseCase attackUseCase,
             Application.Player.PlayerDamageUseCase damageUseCase,
-            Presentation.Player.PlayerInputReceiver inputReceiver
+            Presentation.Player.PlayerInputReceiver inputReceiver,
+            IPublisher<Events.PlayerStateChangedEvent> publisher
         )
         {
             _player = player;
@@ -63,6 +66,7 @@ namespace Framework.Core.DI
             _attackUseCase = attackUseCase;
             _damageUseCase = damageUseCase;
             _inputReceiver = inputReceiver;
+            _publisher = publisher;
         }
 
         public void Start()
@@ -74,11 +78,11 @@ namespace Framework.Core.DI
             _inputReceiver.Initialize(_moveUseCase, _attackUseCase, _damageUseCase);
             
             Debug.Log("[GamePlayerInitializer] Creating states...");
-            var idleState = new Game.Player.PlayerState.PlayerIdleState(_player, _player.StateMachine, _moveUseCase, _attackUseCase, _playerView);
-            var moveState = new Game.Player.PlayerState.PlayerMoveState(_player, _player.StateMachine, _moveUseCase, _attackUseCase, _playerView);
-            var attackState = new Game.Player.PlayerState.PlayerAttackState(_player, _player.StateMachine, _moveUseCase, _attackUseCase, _playerView);
-            var damageState = new Game.Player.PlayerState.PlayerDamageState(_player, _player.StateMachine, _moveUseCase, _attackUseCase, _playerView);
-            var deathState = new Game.Player.PlayerState.PlayerDeathState(_player, _player.StateMachine, _moveUseCase, _attackUseCase, _playerView);
+            var idleState = new Game.Player.PlayerState.PlayerIdleState(_player, _player.StateMachine,_publisher);
+            var moveState = new Game.Player.PlayerState.PlayerMoveState(_player, _player.StateMachine,_publisher);
+            var attackState = new Game.Player.PlayerState.PlayerAttackState(_player, _player.StateMachine,_publisher);
+            var damageState = new Game.Player.PlayerState.PlayerDamageState(_player, _player.StateMachine,_publisher);
+            var deathState = new Game.Player.PlayerState.PlayerDeathState(_player, _player.StateMachine,_publisher);
             
             Debug.Log("[GamePlayerInitializer] Registering states...");
             _player.StateMachine.RegisterState(idleState);
@@ -92,18 +96,7 @@ namespace Framework.Core.DI
         }
 
         public void Tick()
-        {
-            // 入力処理
-            var moveDirection = _inputReceiver.MoveDirection.Value;
-            if (moveDirection.magnitude > 0.01f)
-            {
-                Debug.Log($"[GamePlayerInitializer] Processing move input: {moveDirection}");
-                _moveUseCase.Move(moveDirection);
-            }
-            
-            // 攻撃入力処理
-            // これはPlayerInputReceiver内で処理
-            
+        {   
             _damageUseCase.Update();
             _player.StateMachine.Update(Time.deltaTime);
         }

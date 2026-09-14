@@ -20,11 +20,10 @@ namespace Framework.Core.Patterns
         ///<summary>
         /// コンストラクタ
         /// </summary>
-        protected CharacterState(ICharacter character, CharacterStateMachine stateMachine,PlayerView view)
+        protected CharacterState(ICharacter character, CharacterStateMachine stateMachine)
         {
             _character = character;
             _stateMachine = stateMachine;
-            _view = view;
         }
 
         ///<summary>

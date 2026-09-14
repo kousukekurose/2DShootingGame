@@ -25,7 +25,13 @@ namespace Game.Player
         public CharacterStats Stats => _stats;
         public bool IsActive => _isActive;
         public void Activate() => _isActive = true;
+        private Vector3 _currentInputDirection = Vector3.zero;
+        public Vector3 GetCurrentInputDirection => _currentInputDirection;
 
+        public void SetInputDirection(Vector3 direction)
+        {
+            _currentInputDirection = direction;
+        }
         //IMovable実装
         public void Move(Vector3 direction,float deltaTime)
         {

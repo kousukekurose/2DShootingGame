@@ -50,13 +50,9 @@ namespace Presentation.Player
         private void Update()
         {
             Vector2 rowInput = _input.Player.Move.ReadValue<Vector2>();
-            
-            if (rowInput.magnitude > 0.01f)
-            {
-                Debug.Log($"[PlayerInputReceiver] Move input detected: {rowInput}");
-            }
-
-            _moveDirection.Value = new Vector3(rowInput.x,rowInput.y,0f).normalized;
+            _moveDirection.Value = new Vector3(rowInput.x, rowInput.y, 0f).normalized;
+            // 入力があればUseCaseを呼ぶ
+            _moveUseCase.Move(_moveDirection.Value);
         }
 
         private void OnAttackStarted(InputAction.CallbackContext context)

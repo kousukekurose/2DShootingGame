@@ -1,5 +1,7 @@
-using Unity.VisualScripting;
+using MessagePipe;
 using UnityEngine;
+using VContainer;
+using System;
 
 namespace Presentation.Player
 {
@@ -20,6 +22,21 @@ namespace Presentation.Player
 
         private Game.Player.Player _player;
         public Game.Player.Player Player => _player;
+
+        private IDisposable _disposable;
+        private IPublisher<Framework.Core.Events.PlayerStateChangedEvent> _publisher;
+        private ISubscriber<Framework.Core.Events.PlayerStateChangedEvent> _subscriber;
+
+        [Inject]
+        private void Construct(ISubscriber<Framework.Core.Events.PlayerStateChangedEvent> subscribe)
+        {
+            _subscriber = subscribe;
+            _disposable = subscribe.Subscribe(stateEvent =>
+            {
+                Debug.Log("アニメーション再生");
+                //PlayAnimation(stateEvent.StateName);
+            });
+        }
 
         private void Awake()
         {
@@ -50,10 +67,10 @@ namespace Presentation.Player
             }
         }
 
-        // public void PlayAnimation(string animationName)
-        // {
-        //     if(animator != null) animator.Play(animationName);
-        // }
+        public void PlayAnimation(string animationName)
+        {
+            if(animator != null) animator.Play(animationName);
+        }
 
         public void SetVisible(bool visible)
         {

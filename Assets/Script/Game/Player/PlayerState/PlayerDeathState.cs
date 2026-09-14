@@ -1,5 +1,4 @@
-using UnityEngine;
-
+using MessagePipe;
 
 namespace Game.Player.PlayerState
 {
@@ -8,15 +7,12 @@ namespace Game.Player.PlayerState
         public PlayerDeathState(
             Player player,
             Framework.Core.Patterns.CharacterStateMachine stateMachine,
-            Application.Player.PlayerMoveUseCase  moveUseCase,
-            Application.Player.PlayerAttackUseCase attackUseCase,
-            Presentation.Player.PlayerView view
-        ):base(player,stateMachine,moveUseCase,attackUseCase,view){}
+            IPublisher<Framework.Core.Events.PlayerStateChangedEvent> publisher
+        ):base(player,stateMachine,publisher){}
 
         public override void Enter()
         {
-            //_view.PlayAnimation("Death");
-            //_view.SetVelocity(Vector2.zero);
+            PublishStateChanged("Death");
         }
 
         public override void Update(float deltaTime)

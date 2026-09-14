@@ -1,3 +1,5 @@
+using MessagePipe;
+using UnityEngine;
 
 namespace Game.Player.PlayerState
 {
@@ -6,25 +8,27 @@ namespace Game.Player.PlayerState
         public PlayerMoveState(
             Player player,
             Framework.Core.Patterns.CharacterStateMachine stateMachine,
-            Application.Player.PlayerMoveUseCase  moveUseCase,
-            Application.Player.PlayerAttackUseCase attackUseCase,
-            Presentation.Player.PlayerView view
-        ):base(player,stateMachine,moveUseCase,attackUseCase,view){}
+            IPublisher<Framework.Core.Events.PlayerStateChangedEvent> publisher
+        ):base(player,stateMachine,publisher){}
 
         public override void Enter()
         {
-            //_view.PlayAnimation("Move");
-            //_view.SetVelocity(Vector2.zero);
+            PublishStateChanged("Move");
         }
 
         public override void Update(float deltaTime)
         {
             if(!_player.IsActive)return;
+            Vector3 inputDirection = _player.GetCurrentInputDirection;
+            if(inputDirection.sqrMagnitude <= 0.01f)
+            {
+                ChangeState<PlayerIdleState>();
+            }
         }
 
         public override void OnDamageReceived(float damage)
         {
-            
+            ChangeState<PlayerDamageState>();
         }
     }
 }
