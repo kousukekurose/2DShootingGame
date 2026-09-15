@@ -26,16 +26,10 @@ namespace Framework.Core.DI
                 );
             },Lifetime.Singleton).As<Framework.Core.Interfaces.ICharacter>().AsSelf();
 
-            //builder.Register<Patterns.CharacterStateMachine>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerMoveUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerDamageUseCase>(Lifetime.Singleton);
 
-            // builder.Register<Game.Player.PlayerState.PlayerIdleState>(Lifetime.Singleton);
-            // builder.Register<Game.Player.PlayerState.PlayerMoveState>(Lifetime.Singleton);
-            // builder.Register<Game.Player.PlayerState.PlayerAttackState>(Lifetime.Singleton);
-            // builder.Register<Game.Player.PlayerState.PlayerDamageState>(Lifetime.Singleton);
-            // builder.Register<Game.Player.PlayerState.PlayerDeathState>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<GamePlayerInitializer>();
         }

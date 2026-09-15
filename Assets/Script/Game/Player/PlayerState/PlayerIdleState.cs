@@ -31,7 +31,6 @@ namespace Game.Player.PlayerState
         public override void OnDamageReceived(float damage)
         {
             ChangeState<PlayerDamageState>();
-            return;
         }
 
     }

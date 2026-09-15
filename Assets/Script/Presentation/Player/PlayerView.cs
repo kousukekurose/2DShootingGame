@@ -1,4 +1,5 @@
 using MessagePipe;
+using R3;
 using UnityEngine;
 using VContainer;
 using System;
@@ -23,20 +24,9 @@ namespace Presentation.Player
         private Game.Player.Player _player;
         public Game.Player.Player Player => _player;
 
-        private IDisposable _disposable;
-        private IPublisher<Framework.Core.Events.PlayerStateChangedEvent> _publisher;
-        private ISubscriber<Framework.Core.Events.PlayerStateChangedEvent> _subscriber;
-
-        [Inject]
-        private void Construct(ISubscriber<Framework.Core.Events.PlayerStateChangedEvent> subscribe)
-        {
-            _subscriber = subscribe;
-            _disposable = subscribe.Subscribe(stateEvent =>
-            {
-                Framework.Core.CustomLogger.Log("アニメーション再生");
-                //PlayAnimation(stateEvent.StateName);
-            });
-        }
+        private CompositeDisposable _disposable;
+        private ISubscriber<Framework.Core.Events.PlayerDamageTakenEvent> _damageTakenSubscriber;
+        private ISubscriber<Framework.Core.Events.PlayerStateChangedEvent> _stateChangedSubscriber;
 
         private void Awake()
         {
@@ -45,9 +35,31 @@ namespace Presentation.Player
             if(animator == null)animator = GetComponent<Animator>();
         }
 
+        [Inject]
+        private void Construct(ISubscriber<Framework.Core.Events.PlayerStateChangedEvent> stateChangedSubscriber,
+                                ISubscriber<Framework.Core.Events.PlayerDamageTakenEvent> damageTakenSubscriber)
+        {
+            _stateChangedSubscriber = stateChangedSubscriber;
+            _damageTakenSubscriber = damageTakenSubscriber;
+
+            _disposable = new CompositeDisposable();
+            _disposable.Add(_stateChangedSubscriber.Subscribe(OnStateChanged));
+            _disposable.Add(_damageTakenSubscriber.Subscribe(OnDamageTaken));
+        }
+
         public void InitializePlayer(Game.Player.Player player)
         {
             _player = player;
+        }
+
+        private void OnStateChanged(Framework.Core.Events.PlayerStateChangedEvent stateEvent)
+        {
+            PlayAnimation(stateEvent.StateName);
+        }
+
+        private void OnDamageTaken(Framework.Core.Events.PlayerDamageTakenEvent damageEvent)
+        {
+            SetColor(Color.red);
         }
 
         private void FixedUpdate()
@@ -69,7 +81,11 @@ namespace Presentation.Player
 
         public void PlayAnimation(string animationName)
         {
-            if(animator != null) animator.Play(animationName);
+            if(animator != null) 
+            {
+                //animator.Play(animationName);
+                Framework.Core.CustomLogger.Log("アニメーションを受け取って再生");
+            }
         }
 
         public void SetVisible(bool visible)
