@@ -683,18 +683,14 @@ MonoBehaviour:
   spriteRenderer: {fileID: 1368744115}
   animator: {fileID: 1368744117}
   rb2d: {fileID: 1368744116}
-  characterId: Player_001
+  playerConfig: {fileID: 11400000, guid: 3a11616c861f14375ab8a590a1854fc9, type: 2}
   defaultStats:
     MaxHP: 100
-    CurrentHP: 0
     MoveSpeed: 5
-    Acceleration: 10
-    Deceleration: 10
     AttackPower: 10
     AttackRange: 10
     AttackCooldown: 0.5
     Defense: 0
-    InvincibilityDuration: 0.5
 --- !u!1 &1494474230
 GameObject:
   m_ObjectHideFlags: 0

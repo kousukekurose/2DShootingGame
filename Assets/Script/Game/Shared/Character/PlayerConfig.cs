@@ -1,4 +1,3 @@
-using Framework.Core.Patterns;
 using UnityEngine;
 
 namespace Game.Shared.Character
@@ -14,7 +13,7 @@ namespace Game.Shared.Character
 
         [Header("GamePlay")]
         public float MoveSpeed = 5f;
-        public float AttackRAnge = 5f;
+        public float AttackRange = 5f;
         public float AttackCooldown = 0.5f;
         public float AttackPower = 10f;  
         public float Defense = 0f;
