@@ -19,12 +19,13 @@ namespace Framework.Core.DI
             builder.Register<Game.Player.Player>(container =>
             {
                 var view = container.Resolve<Presentation.Player.PlayerView>();
+                var config = view.PlayerConfig;
                 return new Game.Player.Player(
-                    view.CharacterId,
-                    view.DefaultStats.Clone(),
+                    config.CharacterId,
+                    config.DefaultStats.Clone(),
                     view.transform.position
                 );
-            },Lifetime.Singleton).As<Framework.Core.Interfaces.ICharacter>().AsSelf();
+            },Lifetime.Singleton).As<Interfaces.ICharacter>().AsSelf();
 
             builder.Register<Application.Player.PlayerMoveUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);

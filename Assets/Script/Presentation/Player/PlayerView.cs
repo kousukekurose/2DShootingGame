@@ -16,8 +16,8 @@ namespace Presentation.Player
         [SerializeField] private Rigidbody2D rb2d;
 
         [Header("Settings")]
-        [SerializeField] private string characterId = "Player_001";
-        public string CharacterId => characterId;
+        [SerializeField] private Game.Shared.Character.PlayerConfig playerConfig;
+        public Game.Shared.Character.PlayerConfig PlayerConfig => playerConfig;
         [SerializeField] private Game.Shared.Character.CharacterStats defaultStats;
         public Game.Shared.Character.CharacterStats DefaultStats => defaultStats;
 
@@ -54,7 +54,28 @@ namespace Presentation.Player
 
         private void OnStateChanged(Framework.Core.Events.PlayerStateChangedEvent stateEvent)
         {
-            PlayAnimation(stateEvent.StateName);
+            string animationName = GetAnimationName(stateEvent.StateName);
+            Framework.Core.CustomLogger.Log($"{stateEvent.StateName}アニメーションを受け取って再生");
+            //PlayAnimation(animationName);
+        }
+
+        private string GetAnimationName(string stateName)
+        {
+            switch (stateName)
+            {
+                case "Idle":
+                return playerConfig.IdleAnimation;
+                case "Move":
+                return playerConfig.MoveAnimation;
+                case "Attack":
+                return playerConfig.AttackAnimation;
+                case "Damage":
+                return playerConfig.DamageAnimation;
+                case "Death":
+                return playerConfig.DeathAnimation;
+                default:
+                return playerConfig.IdleAnimation;
+            }
         }
 
         private void OnDamageTaken(Framework.Core.Events.PlayerDamageTakenEvent damageEvent)
@@ -83,8 +104,7 @@ namespace Presentation.Player
         {
             if(animator != null) 
             {
-                //animator.Play(animationName);
-                Framework.Core.CustomLogger.Log("アニメーションを受け取って再生");
+                animator.Play(animationName);
             }
         }
 
