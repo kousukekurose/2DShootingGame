@@ -1,4 +1,3 @@
-using Framework.Core.Interfaces;
 using UnityEngine;
 
 namespace Framework.Core.Interfaces

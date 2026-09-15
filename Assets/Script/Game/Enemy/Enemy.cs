@@ -100,11 +100,11 @@ namespace Game.Enemy
             }
         }
 
-        public Enemy(string enemyId,Shared.Character.CharacterStats stats,Vector3 initaialPosition,Framework.Core.Interfaces.EnemyType enemyType)
+        public Enemy(string enemyId,Shared.Character.CharacterStats stats,Vector3 initialPosition,Framework.Core.Interfaces.EnemyType enemyType)
         {
             _enemyId = enemyId;
             _stats = stats;
-            _currentPosition = initaialPosition;
+            _currentPosition = initialPosition;
             _enemyType = enemyType;
             _stateMachine = new Framework.Core.Patterns.CharacterStateMachine(this);
         }

@@ -25,10 +25,10 @@ namespace Framework.Core.Interfaces
         void DisableAI();
     }
 
-　　　　　///<summary>
-         /// 敵の種類
-         ///</summary>
-        public enum EnemyType
+　　　///<summary>
+　　　/// 敵の種類
+　　　///</summary>
+    public enum EnemyType
     {
         Basic,
         Fast,

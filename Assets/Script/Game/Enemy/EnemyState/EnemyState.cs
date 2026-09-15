@@ -1,16 +1,28 @@
-using UnityEngine;
+using MessagePipe;
 
-public class EnemyState : MonoBehaviour
+namespace Game.Enemy.EnemyState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class EnemyState : Framework.Core.Patterns.CharacterState
     {
-        
-    }
+        protected readonly Enemy _enemy;
+        protected readonly IPublisher<Framework.Core.Events.EnemyStateChangedEvent> _stateChangedPublisher;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        protected EnemyState(
+            Enemy enemy,
+            Framework.Core.Patterns.CharacterStateMachine stateMachine,
+            IPublisher<Framework.Core.Events.EnemyStateChangedEvent> stateChangedPublisher
+        ):base(enemy,stateMachine)
+        {
+            _enemy = enemy;
+            _stateChangedPublisher = stateChangedPublisher;
+        }
+
+        protected void PublishStateChanged(string stateName)
+        {
+            _stateChangedPublisher.Publish(new Framework.Core.Events.EnemyStateChangedEvent
+            {
+                StateName = stateName
+            });
+        }
     }
 }

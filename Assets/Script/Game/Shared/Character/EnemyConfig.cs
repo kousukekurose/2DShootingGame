@@ -1,4 +1,3 @@
-using Framework.Core.Interfaces;
 using UnityEngine;
 
 namespace Game.Shared.Character
@@ -8,7 +7,7 @@ namespace Game.Shared.Character
     {
         [Header("Character Settings")]
         public string CharacterId = "Enemy_001";
-        public EnemyType EnemyType = EnemyType.Basic;
+        public Framework.Core.Interfaces.EnemyType EnemyType = Framework.Core.Interfaces.EnemyType.Basic;
 
         [Header("States")]
         public CharacterStats DefaultStats;
@@ -22,7 +21,14 @@ namespace Game.Shared.Character
         [Header("Behavior")]
         public bool Aggressive = true;
         public bool RetreatOnLowHP = false;
-        public float RetreatThresholod = 0.3f;
+        public float RetreatThreshold = 0.3f;
+
+        [Header("")]
+        public string IdleAnimation = "Idle";
+        public string ChaseAnimation = "Chase";
+        public string AttackAnimation = "Attack";
+        public string DamageAnimation = "Damage";
+        public string DeathAnimation = "Death";  
 
     }
 }
