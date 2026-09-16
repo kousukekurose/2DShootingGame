@@ -6,7 +6,7 @@ using Framework.Core.Patterns;
 
 namespace Game.Player
 {
-    public class Player : ICharacter,IMovable,IAttacker,IDamageable
+    public class Player : ICharacter,IMovable,IAttacker,IDamageable,ITargetable
     {
         private readonly string _characterId;
         private readonly CharacterStats _stats;
@@ -27,6 +27,9 @@ namespace Game.Player
         public void Activate() => _isActive = true;
         private Vector3 _currentInputDirection = Vector3.zero;
         public Vector3 GetCurrentInputDirection => _currentInputDirection;
+
+        public Vector3 Position => GetCurrentPosition();
+        public bool IsValidTarget => IsActive && !IsDead;
 
         public void SetInputDirection(Vector3 direction)
         {
