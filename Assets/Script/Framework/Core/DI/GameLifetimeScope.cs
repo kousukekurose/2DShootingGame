@@ -10,7 +10,13 @@ namespace Framework.Core.DI
         [Header("Scene References")]
         [SerializeField] private Presentation.Player.PlayerView playerView;
         [SerializeField] private Presentation.Player.PlayerInputReceiver playerInputReceiver;
-        [SerializeField] private Presentation.Enemy.EnemyView enemyView;
+        [Header("Enemy references")]
+        [SerializeField] private GameObject basicEnemyPrefab;
+        [SerializeField] private GameObject fastEnemyPrefab;
+        [SerializeField] private GameObject tankEnemyPrefab;
+        [SerializeField] private GameObject rangedEnemyPrefab;
+        [SerializeField] private GameObject bossEnemyPrefab;
+        [SerializeField] private Game.Shared.Character.EnemyConfig enemyConfig;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -36,6 +42,17 @@ namespace Framework.Core.DI
             builder.Register<Application.Player.PlayerDamageUseCase>(Lifetime.Singleton);
             
             builder.RegisterEntryPoint<GamePlayerInitializer>();
+            RegisterSystem(builder);
+        }
+
+        private void RegisterSystem(IContainerBuilder builder)
+        {
+            builder.RegisterComponent(enemyConfig);
+            builder.Register<Application.Enemy.EnemyPrefabRegistry>(Lifetime.Singleton);
+            builder.Register<Application.Enemy.EnemyManager>(Lifetime.Singleton);
+            builder.Register<Application.Enemy.EnemyFactory>(Lifetime.Singleton);
+            builder.Register<Application.Enemy.EnemySpawner>(Lifetime.Singleton);
+            builder.RegisterEntryPoint<EnemySystemInitializer>(Lifetime.Singleton);
         }
     }
 
@@ -97,6 +114,55 @@ namespace Framework.Core.DI
         {   
             _damageUseCase.Update();
             _player.StateMachine.Update(Time.deltaTime);
+        }
+    }
+
+    public class EnemySystemInitializer : IStartable
+    {
+        private readonly Application.Enemy.EnemyPrefabRegistry _prefabRegistry;
+        private readonly GameObject _basicEnemyPrefab;
+        private readonly GameObject _fastEnemyPrefab;
+        private readonly GameObject _tankEnemyPrefab;
+        private readonly GameObject _rangedEnemyPrefab;
+        private readonly GameObject _bossEnemyPrefab;
+        private readonly Application.Enemy.EnemySpawner _enemySpawner;
+
+        public EnemySystemInitializer(
+            Application.Enemy.EnemyPrefabRegistry prefabRegistry,
+            Application.Enemy.EnemySpawner enemySpawner,
+            GameObject basicEnemyPrefab,
+            GameObject fastEnemyPrefab,
+            GameObject tankEnemyPrefab,
+            GameObject rangedEnemyPrefab,
+            GameObject bossEnemyPrefab
+        )
+        {
+            _prefabRegistry = prefabRegistry;
+            _enemySpawner = enemySpawner;
+            _basicEnemyPrefab = basicEnemyPrefab;
+            _fastEnemyPrefab = fastEnemyPrefab;
+            _tankEnemyPrefab = tankEnemyPrefab;
+            _rangedEnemyPrefab = rangedEnemyPrefab;
+            _bossEnemyPrefab = bossEnemyPrefab;
+        }
+
+        public void Start() 
+        {
+            if(_basicEnemyPrefab != null)
+            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Basic,_basicEnemyPrefab);
+            if(_fastEnemyPrefab != null)
+            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Fast,_fastEnemyPrefab);
+            if(_tankEnemyPrefab != null)
+            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Tank,_tankEnemyPrefab);
+            if(_rangedEnemyPrefab != null)
+            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Ranged,_rangedEnemyPrefab);
+            if(_bossEnemyPrefab != null)
+            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Boss,_bossEnemyPrefab);
+
+            CustomLogger.Log("Enemy system initialized with prefab registry");
+
+            _enemySpawner.SpawnEnemyAtRandomPosition(Interfaces.EnemyType.Basic);
+            
         }
     }
 
