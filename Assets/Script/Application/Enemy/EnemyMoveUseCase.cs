@@ -12,8 +12,8 @@ namespace Application.Enemy
 
         public EnemyMoveUseCase(Game.Enemy.Enemy enemy, Presentation.Enemy.EnemyView enemyView)
         {
-            _enemy = enemy ?? throw new System.AggregateException(nameof(enemy));
-            _enemyView = enemyView ?? throw new System.AccessViolationException(nameof(enemyView));
+            _enemy = enemy ?? throw new System.ArgumentException(nameof(enemy));
+            _enemyView = enemyView ?? throw new System.ArgumentException(nameof(enemyView));
         }
         
         public void MoveToTarget(Vector3 tragertPosition)
@@ -21,7 +21,7 @@ namespace Application.Enemy
             if(!_enemy.IsActive)return;
             Vector3 direction = (tragertPosition - _enemy.GetCurrentPosition()).normalized;
             _enemy.Move(direction,Time.deltaTime);
-            _enemyView.UpdataPositionFromPhysics();
+            _enemyView.UpdatePositionFromPhysics();
         }
     }
 }
