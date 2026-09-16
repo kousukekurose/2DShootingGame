@@ -82,7 +82,7 @@ namespace Presentation.Enemy
             SetColor(Color.red);
         }
 
-        public void UpdataPositionFromPhysics()
+        public void UpdatePositionFromPhysics()
         {
             if(_enemy != null && rb2d != null)
             {
