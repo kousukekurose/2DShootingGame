@@ -10,9 +10,13 @@ namespace Framework.Core.DI
         [Header("Scene References")]
         [SerializeField] private Presentation.Player.PlayerView playerView;
         [SerializeField] private Presentation.Player.PlayerInputReceiver playerInputReceiver;
+        [SerializeField] private Presentation.Enemy.EnemyView enemyView;
+
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterMessagePipe(options =>{});
+
+            //Playerの登録
             builder.RegisterComponent(playerView);
             builder.RegisterComponent(playerInputReceiver);
 
@@ -30,8 +34,7 @@ namespace Framework.Core.DI
             builder.Register<Application.Player.PlayerMoveUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerDamageUseCase>(Lifetime.Singleton);
-
-
+            
             builder.RegisterEntryPoint<GamePlayerInitializer>();
         }
     }
@@ -96,4 +99,5 @@ namespace Framework.Core.DI
             _player.StateMachine.Update(Time.deltaTime);
         }
     }
+
 }
