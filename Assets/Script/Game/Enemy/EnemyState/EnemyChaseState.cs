@@ -21,16 +21,20 @@ namespace Game.Enemy.EnemyState
             if(_enemy.CurrentTarget == null)
             {
                 ChangeState<EnemyIdleState>();
+                return;
             }
-            else
-            {
-                float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
+            
+            
+            float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
 
-                if(distance < _enemy.Stats.AttackRange)
-                {
-                    //ChangeState<EnemyChaseState>();
-                }
+            if(distance < _enemy.Stats.AttackRange)
+            {
+                ChangeState<EnemyAttackState>();
+                return;
             }
+            
+            Vector3 direction = (_enemy.CurrentTarget.Position - _enemy.GetCurrentPosition()).normalized;
+            _enemy.Move(direction,deltaTime);
         }
     }
 }

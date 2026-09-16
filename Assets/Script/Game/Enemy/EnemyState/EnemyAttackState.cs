@@ -1,4 +1,5 @@
 using MessagePipe;
+using UnityEngine;
 
 namespace Game.Enemy.EnemyState
 {
@@ -19,6 +20,18 @@ namespace Game.Enemy.EnemyState
         {
             if(!_enemy.IsActive) return;
 
+            if(_enemy.CurrentTarget == null)
+            {
+                ChangeState<EnemyIdleState>();
+                return;
+            }
+
+            float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
+            if(distance > _enemy.Stats.AttackRange)
+            {
+                ChangeState<EnemyChaseState>();
+            }
+            
             if(_enemy.CanAttack)
             {
                 if(_enemy.CurrentTarget != null)
@@ -26,8 +39,6 @@ namespace Game.Enemy.EnemyState
                     _enemy.Attack(_enemy.CurrentTarget.Position);
                 }
             }
-
-            ChangeState<EnemyIdleState>();
         }
     }
 }
