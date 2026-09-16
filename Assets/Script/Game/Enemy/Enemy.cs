@@ -4,7 +4,7 @@ namespace Game.Enemy
 {
     public class Enemy : Framework.Core.Interfaces.IEnemy
     {
-        public readonly string _enemyId;
+        private readonly string _enemyId;
         private readonly Shared.Character.CharacterStats _stats;
         private readonly Framework.Core.Patterns.CharacterStateMachine _stateMachine;
         private readonly Framework.Core.Interfaces.EnemyType _enemyType;
