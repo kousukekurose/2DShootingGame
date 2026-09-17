@@ -17,6 +17,7 @@ namespace Presentation.Player
         private Application.Player.PlayerMoveUseCase _moveUseCase;
         private Application.Player.PlayerAttackUseCase _attackUseCase;
         private Application.Player.PlayerDamageUseCase _damageUseCase;
+        private bool _isInitialized = false;
 
 
         public void Initialize(Application.Player.PlayerMoveUseCase moveUseCase,Application.Player.PlayerAttackUseCase attackUseCase,Application.Player.PlayerDamageUseCase damageUseCase)
@@ -24,6 +25,7 @@ namespace Presentation.Player
             _moveUseCase = moveUseCase;
             _attackUseCase = attackUseCase;
             _damageUseCase = damageUseCase;
+            _isInitialized = true;
             Framework.Core.CustomLogger.Log("[PlayerInputReceiver] Initialize called - UseCases assigned");
         }
 
@@ -49,6 +51,11 @@ namespace Presentation.Player
 
         private void Update()
         {
+            if(!_isInitialized || _moveUseCase == null)
+            {
+                return;
+            }
+
             Vector2 rowInput = _input.Player.Move.ReadValue<Vector2>();
             _moveDirection.Value = new Vector3(rowInput.x, rowInput.y, 0f).normalized;
             // 入力があればUseCaseを呼ぶ

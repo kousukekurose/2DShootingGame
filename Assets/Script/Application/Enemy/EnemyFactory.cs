@@ -70,8 +70,8 @@ namespace Application.Enemy
             _enemyManager.RegisterEnemy(enemy);
 
             Framework.Core.CustomLogger.Log($"Spawned {enemyType} enemy at {position}");
-            var initializer = enemyObject.AddComponent<GameEnemyInitializer>();
-            _resolver.Inject(initializer);
+            var initializer =  _resolver.Resolve<EnemyInitializer>();
+            initializer.Initialize(enemy, enemyView);
 
             return enemyView;
 
