@@ -10,13 +10,8 @@ namespace Framework.Core.DI
         [Header("Scene References")]
         [SerializeField] private Presentation.Player.PlayerView playerView;
         [SerializeField] private Presentation.Player.PlayerInputReceiver playerInputReceiver;
-        [Header("Enemy references")]
-        [SerializeField] private GameObject basicEnemyPrefab;
-        [SerializeField] private GameObject fastEnemyPrefab;
-        [SerializeField] private GameObject tankEnemyPrefab;
-        [SerializeField] private GameObject rangedEnemyPrefab;
-        [SerializeField] private GameObject bossEnemyPrefab;
         [SerializeField] private Game.Shared.Character.EnemyConfig enemyConfig;
+        [SerializeField] private Application.Enemy.EnemySystemConfig enemySystemConfig;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -25,6 +20,9 @@ namespace Framework.Core.DI
             //Playerの登録
             builder.RegisterComponent(playerView);
             builder.RegisterComponent(playerInputReceiver);
+
+            // PlayerConfigの登録
+            builder.RegisterComponent(playerView.PlayerConfig);
 
             builder.Register<Game.Player.Player>(container =>
             {
@@ -35,12 +33,12 @@ namespace Framework.Core.DI
                     config.DefaultStats.Clone(),
                     view.transform.position
                 );
-            },Lifetime.Singleton).As<Interfaces.ICharacter>().AsSelf();
+            },Lifetime.Singleton).As<Interfaces.ICharacter>().AsSelf().As<Interfaces.ITargetable>();
 
             builder.Register<Application.Player.PlayerMoveUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerDamageUseCase>(Lifetime.Singleton);
-            
+
             builder.RegisterEntryPoint<GamePlayerInitializer>();
             RegisterSystem(builder);
         }
@@ -48,15 +46,18 @@ namespace Framework.Core.DI
         private void RegisterSystem(IContainerBuilder builder)
         {
             builder.RegisterComponent(enemyConfig);
+            builder.RegisterComponent(enemySystemConfig);
             builder.Register<Application.Enemy.EnemyPrefabRegistry>(Lifetime.Singleton);
             builder.Register<Application.Enemy.EnemyManager>(Lifetime.Singleton);
             builder.Register<Application.Enemy.EnemyFactory>(Lifetime.Singleton);
-            
+
             // 敵UseCaseの登録
             builder.Register<Application.Enemy.EnemyMoveUseCase>(Lifetime.Transient);
             builder.Register<Application.Enemy.EnemyAttackUseCase>(Lifetime.Transient);
             builder.Register<Application.Enemy.EnemyDamageUseCase>(Lifetime.Transient);
-            
+
+            builder.Register<Application.Enemy.EnemyInitializer>(Lifetime.Transient);
+
             builder.Register<Application.Enemy.EnemySpawner>(Lifetime.Singleton);
             builder.RegisterEntryPoint<EnemySystemInitializer>();
         }
@@ -126,53 +127,43 @@ namespace Framework.Core.DI
     public class EnemySystemInitializer : IStartable, ITickable
     {
         private readonly Application.Enemy.EnemyPrefabRegistry _prefabRegistry;
-        private readonly GameObject _basicEnemyPrefab;
-        private readonly GameObject _fastEnemyPrefab;
-        private readonly GameObject _tankEnemyPrefab;
-        private readonly GameObject _rangedEnemyPrefab;
-        private readonly GameObject _bossEnemyPrefab;
         private readonly Application.Enemy.EnemySpawner _enemySpawner;
         private readonly Application.Enemy.EnemyManager _enemyManager;
+        private readonly Application.Enemy.EnemySystemConfig _config;
 
         public EnemySystemInitializer(
             Application.Enemy.EnemyPrefabRegistry prefabRegistry,
             Application.Enemy.EnemySpawner enemySpawner,
             Application.Enemy.EnemyManager enemyManager,
-            GameObject basicEnemyPrefab,
-            GameObject fastEnemyPrefab,
-            GameObject tankEnemyPrefab,
-            GameObject rangedEnemyPrefab,
-            GameObject bossEnemyPrefab
-        )
+            Application.Enemy.EnemySystemConfig config)
         {
             _prefabRegistry = prefabRegistry;
             _enemySpawner = enemySpawner;
             _enemyManager = enemyManager;
-            _basicEnemyPrefab = basicEnemyPrefab;
-            _fastEnemyPrefab = fastEnemyPrefab;
-            _tankEnemyPrefab = tankEnemyPrefab;
-            _rangedEnemyPrefab = rangedEnemyPrefab;
-            _bossEnemyPrefab = bossEnemyPrefab;
+            _config = config;
         }
 
         public void Start()
         {
-            if(_basicEnemyPrefab != null)
-            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Basic,_basicEnemyPrefab);
-            if(_fastEnemyPrefab != null)
-            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Fast,_fastEnemyPrefab);
-            if(_tankEnemyPrefab != null)
-            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Tank,_tankEnemyPrefab);
-            if(_rangedEnemyPrefab != null)
-            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Ranged,_rangedEnemyPrefab);
-            if(_bossEnemyPrefab != null)
-            _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Boss,_bossEnemyPrefab);
+            if(_config != null)
+            {
+                if(_config.basicEnemyPrefab != null)
+                    _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Basic, _config.basicEnemyPrefab);
+                if(_config.fastEnemyPrefab != null)
+                    _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Fast, _config.fastEnemyPrefab);
+                if(_config.tankEnemyPrefab != null)
+                    _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Tank, _config.tankEnemyPrefab);
+                if(_config.rangedEnemyPrefab != null)
+                    _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Ranged, _config.rangedEnemyPrefab);
+                if(_config.bossEnemyPrefab != null)
+                    _prefabRegistry.RegisterPrefab(Interfaces.EnemyType.Boss, _config.bossEnemyPrefab);
+            }
 
             CustomLogger.Log("Enemy system initialized with prefab registry");
 
             _enemySpawner.SpawnEnemyAtRandomPosition(Interfaces.EnemyType.Basic);
         }
-        
+
         public void Tick()
         {
             _enemyManager.UpdateAll(Time.deltaTime);
