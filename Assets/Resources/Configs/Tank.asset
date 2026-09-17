@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecc87e629a8cf46c68f886921b5af90c, type: 3}
+  m_Name: Tank
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Shared.Character.EnemyConfig
+  CharacterId: Enemy_001
+  EnemyType: 2
+  DefaultStats:
+    MaxHP: 100
+    MoveSpeed: 5
+    AttackPower: 10
+    AttackRange: 10
+    AttackCooldown: 0.5
+    Defense: 0
+  DetectionRange: 10
+  ChaseRange: 5
+  AttackRange: 2
+  AIUpdateInterval: 0.5
+  Aggressive: 1
+  RetreatOnLowHP: 0
+  RetreatThreshold: 0.3
+  IdleAnimation: Idle
+  ChaseAnimation: Chase
+  AttackAnimation: Attack
+  DamageAnimation: Damage
+  DeathAnimation: Death

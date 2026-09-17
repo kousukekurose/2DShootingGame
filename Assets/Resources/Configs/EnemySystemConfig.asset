@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3aa52fefc18564f57af03833f7767530, type: 3}
+  m_Name: EnemySystemConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Application.Enemy.EnemySystemConfig
+  basicEnemyPrefab: {fileID: 7515959578758004927, guid: 17d0204c6c30341eea7a2f547410b371, type: 3}
+  fastEnemyPrefab: {fileID: 7515959578758004927, guid: cbfac9e0d854440a1b2975b6b9793259, type: 3}
+  tankEnemyPrefab: {fileID: 7515959578758004927, guid: 292095ee13179405589d85a53811f8f3, type: 3}
+  rangedEnemyPrefab: {fileID: 7515959578758004927, guid: 3407b8199545c48c68e32ce88cca8e77, type: 3}
+  bossEnemyPrefab: {fileID: 7515959578758004927, guid: 4ada422803f04460985a35831850ac35, type: 3}
