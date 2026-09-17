@@ -7,31 +7,32 @@ namespace Application.Enemy
     public class EnemySpawner
     {
         private readonly EnemyFactory  _enemyFactory;
-        private Game.Shared.Character.PlayerConfig  _playerConfig;
+        private Framework.Core.Interfaces.ITargetable _playerTarget;
 
         public EnemySpawner(
             EnemyFactory enemyFactory,
-            Game.Shared.Character.PlayerConfig playerConfig
+            Framework.Core.Interfaces.ITargetable playerTarget
         )
         {
             _enemyFactory = enemyFactory;
-            _playerConfig = playerConfig;
+            _playerTarget = playerTarget;
         }
 
         public Presentation.Enemy.EnemyView SpawnEnemyAtRandomPosition(
             Framework.Core.Interfaces.EnemyType enemyType,
             float minDistance = 5f,
-            float maxDistance = 15f
+            float maxDistance = 8f
         )
         {
-            var randomAngle = Random.Range(0,360f) * Mathf.Deg2Rad;
-            var randomDistance = Random.Range(minDistance,maxDistance);
+            float screenHalfWidth = 3.5f;
+            float randomX = Random.Range(-screenHalfWidth,screenHalfWidth);
+            float randomY = Random.Range(minDistance,maxDistance);
 
-            var spawnPosition = new Vector3(
-                Mathf.Cos(randomAngle) * randomDistance,
-                Mathf.Sin(randomAngle) * randomDistance,
-                0f
-            );
+            var offset = new Vector3(randomX,randomY,0f);
+
+            Vector3 playerPosition = _playerTarget.Position;
+
+            var spawnPosition = playerPosition + offset;
 
             return _enemyFactory.SpawnEnemy(spawnPosition,enemyType);
         }
