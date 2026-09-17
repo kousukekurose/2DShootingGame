@@ -23,7 +23,7 @@ namespace Application.Enemy
 
             if(_prefabMap.ContainsKey(enemyType))
             {
-                Framework.Core.CustomLogger.LogWarning($"Prefab for{enemyType} already registered,overwrting");
+                Framework.Core.CustomLogger.LogWarning($"Prefab for {enemyType} already registered, overwriting");
             }
 
             _prefabMap[enemyType] = prefab;
@@ -37,7 +37,7 @@ namespace Application.Enemy
                 return prefab;
             }
 
-            Framework.Core.CustomLogger.LogError($"Vo prefab registered for {enemyType}");
+            Framework.Core.CustomLogger.LogError($"No prefab registered for {enemyType}");
             return null;
         }
 

@@ -1,7 +1,6 @@
 using UnityEngine;
 using MessagePipe;
 using VContainer;
-using VContainer.Unity;
 
 namespace Application.Enemy
 {
@@ -47,7 +46,7 @@ namespace Application.Enemy
             var prefab = _prefabRegistry.GetPrefab(enemyType);
             if(prefab == null)
             {
-                Framework.Core.CustomLogger.LogError($"Failed to spwan enemy: no prefab for {enemyType}");
+                Framework.Core.CustomLogger.LogError($"Failed to spawn enemy: no prefab for {enemyType}");
                 return null;
             }
 
@@ -56,7 +55,7 @@ namespace Application.Enemy
 
             if(enemyView == null)
             {
-                Framework.Core.CustomLogger.LogError("Spawaned object has no EnemyView component");
+                Framework.Core.CustomLogger.LogError("Spawned object has no EnemyView component");
                 Object.Destroy(enemyObject);
                 return null;
             }
@@ -70,7 +69,9 @@ namespace Application.Enemy
             //敵マネージャーに登録
             _enemyManager.RegisterEnemy(enemy);
 
-            Framework.Core.CustomLogger.Log($"Spwaned {enemyType} enemy at {position}");
+            Framework.Core.CustomLogger.Log($"Spawned {enemyType} enemy at {position}");
+            var initializer = enemyObject.AddComponent<GameEnemyInitializer>();
+            _resolver.Inject(initializer);
 
             return enemyView;
 

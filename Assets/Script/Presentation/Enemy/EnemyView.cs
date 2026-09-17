@@ -97,9 +97,17 @@ namespace Presentation.Enemy
 
         public void PlayAnimation(string animationName)
         {
-            if(animator != null) 
+            if(animator != null)
             {
                 animator.Play(animationName);
+            }
+        }
+        
+        private void Update()
+        {
+            if(_enemy != null && _enemy.IsActive)
+            {
+                UpdatePositionFromPhysics();
             }
         }
     }

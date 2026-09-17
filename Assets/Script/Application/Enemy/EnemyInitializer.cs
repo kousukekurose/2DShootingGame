@@ -4,7 +4,7 @@ using VContainer.Unity;
 
 namespace Application.Enemy
 {
-    public class GameEnemyInitializer : IStartable,ITickable
+    public class GameEnemyInitializer : MonoBehaviour, IStartable,ITickable
     {
         private readonly Game.Enemy.Enemy _enemy;
         private readonly Presentation.Enemy.EnemyView _enemyView;
@@ -12,6 +12,7 @@ namespace Application.Enemy
         private readonly EnemyAttackUseCase _enemyAttack;
         private readonly EnemyDamageUseCase _enemyDamage;
         private readonly IPublisher<Framework.Core.Events.EnemyStateChangedEvent> _publisher;
+        private readonly Framework.Core.Interfaces.ITargetable _playerTraget;
 
         public GameEnemyInitializer(
             Game.Enemy.Enemy enemy,
@@ -19,7 +20,8 @@ namespace Application.Enemy
             EnemyMoveUseCase enemyMove,
             EnemyAttackUseCase enemyAttack,
             EnemyDamageUseCase enemyDamage,
-            IPublisher<Framework.Core.Events.EnemyStateChangedEvent> publisher
+            IPublisher<Framework.Core.Events.EnemyStateChangedEvent> publisher,
+            Framework.Core.Interfaces.ITargetable playerTarget
         )
         {
             _enemy = enemy;
@@ -28,11 +30,14 @@ namespace Application.Enemy
             _enemyAttack = enemyAttack;
             _enemyDamage = enemyDamage;
             _publisher = publisher;
+            _playerTraget = playerTarget;
         }
 
         public void Start() 
         {
             _enemyView.InitializeEnemy(_enemy);
+
+            _enemy.SetTarget(_playerTraget);
 
             var idleState = new Game.Enemy.EnemyState.EnemyIdleState(_enemy,_enemy.StateMachine,_publisher);
             var moveState = new Game.Enemy.EnemyState.EnemyChaseState(_enemy,_enemy.StateMachine,_publisher);
@@ -49,8 +54,8 @@ namespace Application.Enemy
 
         public void Tick()
         {
+            if(!_enemy.IsActive) return;
             _enemyDamage.Update();
-            //AiロジックのUpdateを追加予定
             _enemy.StateMachine.Update(Time.deltaTime);
         }
     }
