@@ -36,7 +36,7 @@ namespace Game.Enemy.EnemyState
             {
                 if(_enemy.CurrentTarget != null)
                 {
-                    _enemy.Attack(_enemy.CurrentTarget.Position);
+                    _enemy.Attack(_enemy.CurrentTarget.Position, Domain.Bullet.BulletType.Normal);
                 }
             }
         }

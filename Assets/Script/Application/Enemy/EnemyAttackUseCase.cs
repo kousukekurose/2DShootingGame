@@ -15,8 +15,8 @@ namespace Application.Enemy
 
         public void Attack(Vector3 targetPosition)
         {
-            if(!_enemy.IsActive) return;
-            _enemy.Attack(targetPosition);
+            if(!_enemy.CanAttack) return;
+            _enemy.Attack(targetPosition, Domain.Bullet.BulletType.Normal);
             _enemyView.PlayAnimation("Attack");
         }
     }

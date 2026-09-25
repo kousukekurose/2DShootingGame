@@ -30,13 +30,12 @@ namespace Application.Enemy
         public Game.Enemy.Enemy CreateEnemy(Vector3 position,Framework.Core.Interfaces.EnemyType enemyType)
         {
             var stats = _defaultConfig.DefaultStats.Clone();
-            var enemy = new Game.Enemy.Enemy(
+            return new Game.Enemy.Enemy(
                 _defaultConfig.CharacterId,
                 stats,
                 position,
                 enemyType
             );
-            return enemy;
         }
 
         public Presentation.Enemy.EnemyView SpawnEnemy(
