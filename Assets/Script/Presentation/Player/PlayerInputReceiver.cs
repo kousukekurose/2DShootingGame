@@ -9,10 +9,7 @@ namespace Presentation.Player
         private InputSystem_Actions _input;
 
         private readonly ReactiveProperty<Vector3> _moveDirection = new(Vector3.zero);
-        private readonly Subject<Unit> _attackSubject = new();
-
         public ReactiveProperty<Vector3> MoveDirection => _moveDirection;
-        public Subject<Unit> OnAttackRequested => _attackSubject;
 
         private Application.Player.PlayerMoveUseCase _moveUseCase;
         private Application.Player.PlayerAttackUseCase _attackUseCase;
@@ -64,13 +61,18 @@ namespace Presentation.Player
 
         private void OnAttackStarted(InputAction.CallbackContext context)
         {
-            _attackSubject.OnNext(Unit.Default);
+            if(_isInitialized && _attackUseCase != null)
+            {
+                Vector3 attackDirection = _moveDirection.Value != Vector3.zero ? _moveDirection.Value :Vector3.right;
+                Vector3 targetPosition = _moveUseCase.GetCurrentPosition() + attackDirection * 10f;
+
+                _attackUseCase.Attack(targetPosition);
+            }
         }
 
         private void OnDestroy()
         {
             _moveDirection.Dispose();
-            _attackSubject.Dispose();
         }
     }
 }

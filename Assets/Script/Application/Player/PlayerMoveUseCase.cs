@@ -30,6 +30,11 @@ namespace Application.Player
             
             _playerView.UpdatePositionFromPhysics();
         }
+
+        public Vector3 GetCurrentPosition()
+        {
+            return _player.Position;
+        }
     }
 
 }

@@ -18,6 +18,13 @@ namespace Game.Player.PlayerState
         public override void Update(float deltaTime)
         {
             if(!_player.IsActive)return;
+
+            _player.UpdateCooldownTimer(deltaTime);
+
+            if(_player.CanAttack)
+            {
+                _stateMachine.ChangeState<PlayerIdleState>();
+            }
         }
 
         public override void OnDamageReceived(float damage)
