@@ -17,8 +17,8 @@ MonoBehaviour:
   DefaultStats:
     MaxHP: 100
     MoveSpeed: 5
-    AttackPower: 10
-    AttackRange: 10
+    AttackPower: 5
+    AttackRange: 2
     AttackCooldown: 0.5
     Defense: 0
   DetectionRange: 10
@@ -27,4 +27,9 @@ MonoBehaviour:
   AIUpdateInterval: 0.5
   Aggressive: 1
   RetreatOnLowHP: 0
-  RetreatThresholod: 0.3
+  RetreatThreshold: 0.3
+  IdleAnimation: Idle
+  ChaseAnimation: Chase
+  AttackAnimation: Attack
+  DamageAnimation: Damage
+  DeathAnimation: Death
