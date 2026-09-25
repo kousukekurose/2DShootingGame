@@ -36,7 +36,7 @@ namespace Framework.Core.Interfaces
         /// 指定した位置に攻撃を行う
         /// </summary>
         ///<param name="targetPosition">攻撃対象の位置</param>
-        void Attack(Vector3 targetPosition);
+        void Attack(Vector3 targetPosition, Domain.Bullet.BulletType bulletType);
 
         ///<summary>
         /// 攻撃ターゲットを設定する

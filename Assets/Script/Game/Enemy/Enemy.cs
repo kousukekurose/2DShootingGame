@@ -29,6 +29,7 @@ namespace Game.Enemy
         //IMoveの実装
         public void Move(Vector3 direction,float deltaTime)
         {
+            Framework.Core.CustomLogger.Log($"{_isActive}と{_aiEnable}の確認");
             if(!_isActive || !_aiEnable) return;
             _currentPosition += direction * _stats.MoveSpeed * deltaTime;
         }
@@ -39,12 +40,13 @@ namespace Game.Enemy
         //IAttackの実装
         public float AttackPower => _stats.AttackPower;
         public float AttackRange => _stats.AttackRange;
-        public float AttackCooldown => _attackCooldownTimer;
+        public float AttackCooldown => _stats.AttackCooldown;
         public bool CanAttack => _attackCooldownTimer <= 0f && _isActive;
-        public void Attack(Vector3 targetPosition)
+        public void Attack(Vector3 targetPosition, Domain.Bullet.BulletType bulletType)
         {
             if(!CanAttack) return;
             _attackCooldownTimer = _stats.AttackCooldown;
+            // 弾丸の生成はAttackUseCaseで行うため、ここではクールダウンのみ設定
         }
         
 

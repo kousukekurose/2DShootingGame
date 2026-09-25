@@ -2,6 +2,7 @@ using UnityEngine;
 using Framework.Core.Interfaces;
 using Game.Shared.Character;
 using Framework.Core.Patterns;
+using MessagePipe;
 
 
 namespace Game.Player
@@ -20,6 +21,8 @@ namespace Game.Player
         private float _attackCooldownTimer = 0f;
         private ITargetable _attackTarget;
         private Vector3 _currentPosition;
+        private int _bulletIdCounter = 0;
+        private IPublisher<Framework.Core.Events.PlayerAttackEvent> _attackEventPulisher;
         
         public string CharacterId => _characterId;
         public CharacterStats Stats => _stats;
@@ -51,10 +54,23 @@ namespace Game.Player
         public float AttackCooldown => _stats.AttackCooldown;
         public bool CanAttack => _attackCooldownTimer <= 0 && _isActive;
 
-        public void Attack(Vector3 targetPosition)
+        public void Attack(Vector3 targetPosition, Domain.Bullet.BulletType bulletType = Domain.Bullet.BulletType.Normal)
         {
             if(!CanAttack)return;
             _attackCooldownTimer = _stats.AttackCooldown;
+
+            var attackEvent = new Framework.Core.Events.PlayerAttackEvent
+            {
+                PlayerId = _characterId,
+                AttackPosition = _currentPosition,
+                TargetDirection = (targetPosition - _currentPosition).normalized,
+                AttackPower = _stats.AttackPower,
+                Timestamp = Time.time,
+                BulletId = _bulletIdCounter++,
+                BulletType = bulletType
+            };
+
+            _attackEventPulisher?.Publish(attackEvent);
         }
 
         public void SetAttackTarget(ITargetable target) => _attackTarget = target;
@@ -103,13 +119,14 @@ namespace Game.Player
         }
         public void SetInvincibleState(bool invicible) => _isInvincible = invicible;
 
-        public Player(string characterId,CharacterStats stats,Vector3 initialPosition)
+        public Player(string characterId,CharacterStats stats,Vector3 initialPosition,IPublisher<Framework.Core.Events.PlayerAttackEvent> attackEventPublisher = null)
         {
             _characterId = characterId;
             _stats = stats;
             _currentPosition = initialPosition;
             _currentHP = _stats.MaxHP;
             _stateMachine = new CharacterStateMachine(this);
+            _attackEventPulisher = attackEventPublisher;
         }
 
     }
