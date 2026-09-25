@@ -1,6 +1,5 @@
 using MessagePipe;
 using UnityEngine;
-using VContainer.Unity;
 
 namespace Application.Enemy
 {
@@ -20,10 +19,7 @@ namespace Application.Enemy
 
         public void Initialize(Game.Enemy.Enemy enemy, Presentation.Enemy.EnemyView enemyView) 
         {
-            Framework.Core.CustomLogger.Log($"{_playerTraget}の中身確認");
             enemyView.InitializeEnemy(enemy);
-
-            Framework.Core.CustomLogger.Log($"{_playerTraget}の中身確認");
             enemy.SetTarget(_playerTraget);
 
             var idleState = new Game.Enemy.EnemyState.EnemyIdleState(enemy,enemy.StateMachine,_publisher);

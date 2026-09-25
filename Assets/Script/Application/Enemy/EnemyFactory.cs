@@ -60,8 +60,6 @@ namespace Application.Enemy
                 return null;
             }
 
-            //DIコンテナから注入
-            _resolver.Inject(enemyView);
             //Game層のEnemy作成
             var enemy = CreateEnemy(position,enemyType);
             enemyView.InitializeEnemy(enemy);
@@ -69,9 +67,8 @@ namespace Application.Enemy
             //敵マネージャーに登録
             _enemyManager.RegisterEnemy(enemy);
 
-            Framework.Core.CustomLogger.Log($"Spawned {enemyType} enemy at {position}");
             var initializer =  _resolver.Resolve<EnemyInitializer>();
-            initializer.Initialize(enemy, enemyView);
+            initializer.Initialize(enemy,enemyView);
 
             return enemyView;
 
