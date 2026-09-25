@@ -24,7 +24,6 @@ namespace Game.Enemy.EnemyState
                 return;
             }
             
-            
             float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
 
             if(distance < _enemy.Stats.AttackRange)
@@ -32,7 +31,6 @@ namespace Game.Enemy.EnemyState
                 ChangeState<EnemyAttackState>();
                 return;
             }
-            
             Vector3 direction = (_enemy.CurrentTarget.Position - _enemy.GetCurrentPosition()).normalized;
             _enemy.Move(direction,deltaTime);
         }
