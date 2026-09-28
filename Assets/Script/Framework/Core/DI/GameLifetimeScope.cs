@@ -40,6 +40,8 @@ namespace Framework.Core.DI
                 var bulletDaraArray = Resources.LoadAll<Game.Bullet.BulletData>("Game/Data/BulletData");
                 return new Game.Bullet.BulletDataRegistry(bulletDaraArray);
             },Lifetime.Singleton);
+            builder.Register<Application.Bullet.IBulletFactory,Application.Bullet.BulletFactory>(Lifetime.Singleton);
+            builder.Register<Application.Bullet.BulletManager>(Lifetime.Singleton);
 
             builder.Register<Application.Player.PlayerMoveUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);
@@ -59,7 +61,15 @@ namespace Framework.Core.DI
 
             // 敵UseCaseの登録
             builder.Register<Application.Enemy.EnemyMoveUseCase>(Lifetime.Transient);
-            builder.Register<Application.Enemy.EnemyAttackUseCase>(Lifetime.Transient);
+            builder.Register<Application.Enemy.EnemyAttackUseCase>(container =>
+            {
+                return new Application.Enemy.EnemyAttackUseCase(
+                    container.Resolve<Game.Enemy.Enemy>(),
+                    container.Resolve<Presentation.Enemy.EnemyView>(),
+                    container.Resolve<Application.Bullet.BulletFactory>(),
+                    container.Resolve<Application.Bullet.BulletManager>()
+                );
+            },Lifetime.Transient);
             builder.Register<Application.Enemy.EnemyDamageUseCase>(Lifetime.Transient);
 
             builder.Register<Application.Enemy.EnemyInitializer>(Lifetime.Transient);
@@ -136,17 +146,20 @@ namespace Framework.Core.DI
         private readonly Application.Enemy.EnemySpawner _enemySpawner;
         private readonly Application.Enemy.EnemyManager _enemyManager;
         private readonly Application.Enemy.EnemySystemConfig _config;
+        private readonly Application.Bullet.BulletManager _bulletManager;
 
         public EnemySystemInitializer(
             Application.Enemy.EnemyPrefabRegistry prefabRegistry,
             Application.Enemy.EnemySpawner enemySpawner,
             Application.Enemy.EnemyManager enemyManager,
-            Application.Enemy.EnemySystemConfig config)
+            Application.Enemy.EnemySystemConfig config,
+            Application.Bullet.BulletManager bulletManager)
         {
             _prefabRegistry = prefabRegistry;
             _enemySpawner = enemySpawner;
             _enemyManager = enemyManager;
             _config = config;
+            _bulletManager = bulletManager;
         }
 
         public void Start()
@@ -173,6 +186,7 @@ namespace Framework.Core.DI
         public void Tick()
         {
             _enemyManager.UpdateAll(Time.deltaTime);
+            _bulletManager.Update(Time.deltaTime);
         }
     }
 

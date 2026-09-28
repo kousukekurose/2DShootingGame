@@ -1,3 +1,5 @@
+using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 
@@ -20,11 +22,22 @@ namespace Application.Enemy
             _enemy.TakeDamage(damage,source);
             //_enemyView.PlayAnimation("Damage");
             _enemyView.SetColor(Color.red);
+            ResetColorAfterDelay().Forget();
         }
 
         public void Update()
         {
             _enemy.UpdateCooldownTimer(Time.deltaTime);
+        }
+
+        private async UniTaskVoid ResetColorAfterDelay()
+        {
+            try
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                _enemyView.SetColor(Color.white);
+            }
+            catch(OperationCanceledException){}
         }
     }
 }

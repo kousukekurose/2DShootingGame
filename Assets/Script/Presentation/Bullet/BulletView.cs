@@ -24,6 +24,7 @@ namespace Presentation.Bullet
                 Destroy(gameObject);
                 return;
             }
+            _bullet.Tick(Time.deltaTime);
 
             transform.position = _bullet.Position;
         }

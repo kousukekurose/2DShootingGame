@@ -2,6 +2,8 @@ using UnityEngine;
 using MessagePipe;
 using VContainer;
 using R3;
+using Cysharp.Threading.Tasks;
+using System;
 
 namespace Presentation.Enemy
 {
@@ -80,6 +82,18 @@ namespace Presentation.Enemy
         private void OnDamageTaken(Framework.Core.Events.EnemyDamageTakenEvent damageEvent)
         {
             SetColor(Color.red);
+            ResetColorAfterDelay().Forget();
+        }
+
+        private async UniTaskVoid ResetColorAfterDelay()
+        {
+            try
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                SetColor(Color.white);
+                
+            }
+            catch(OperationCanceledException){}
         }
 
         public void UpdatePositionFromPhysics()
