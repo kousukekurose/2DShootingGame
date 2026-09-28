@@ -35,6 +35,12 @@ namespace Framework.Core.DI
                 );
             },Lifetime.Singleton).As<Interfaces.ICharacter>().AsSelf().As<Interfaces.ITargetable>();
 
+            builder.Register<Game.Bullet.BulletDataRegistry>(container =>
+            {
+                var bulletDaraArray = Resources.LoadAll<Game.Bullet.BulletData>("Game/Data/BulletData");
+                return new Game.Bullet.BulletDataRegistry(bulletDaraArray);
+            },Lifetime.Singleton);
+
             builder.Register<Application.Player.PlayerMoveUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);
             builder.Register<Application.Player.PlayerDamageUseCase>(Lifetime.Singleton);
