@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using R3;
+using System.Security.Cryptography;
 
 namespace Presentation.Player
 {
@@ -61,12 +62,18 @@ namespace Presentation.Player
 
         private void OnAttackStarted(InputAction.CallbackContext context)
         {
+            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] Attack button pressed");
             if(_isInitialized && _attackUseCase != null)
             {
-                Vector3 attackDirection = _moveDirection.Value != Vector3.zero ? _moveDirection.Value :Vector3.right;
+                Vector3 attackDirection = Vector3.up;
                 Vector3 targetPosition = _moveUseCase.GetCurrentPosition() + attackDirection * 10f;
 
+                Framework.Core.CustomLogger.Log($"[PlayerInputReceiver] Calling AttackUseCase.Attack with target: {targetPosition}");
                 _attackUseCase.Attack(targetPosition);
+            }
+            else
+            {
+                Framework.Core.CustomLogger.Log($"[PlayerInputReceiver] AttackUseCase is null: {_attackUseCase == null}, Initialized: {_isInitialized}");
             }
         }
 

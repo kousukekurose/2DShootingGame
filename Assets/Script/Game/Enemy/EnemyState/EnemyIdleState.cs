@@ -23,14 +23,14 @@ namespace Game.Enemy.EnemyState
                 float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
                 if(distance < _enemy.Stats.AttackRange * 2f)
                 {
-                    ChangeState<EnemyChaseState>();
+                    ChangeState<EnemyMoveState>();
                 }
             }
         }
 
         public override void OnDamageReceived(float damage)
         {
-            ChangeState<EnemyChaseState>();
+            ChangeState<EnemyMoveState>();
         }
     }
 }

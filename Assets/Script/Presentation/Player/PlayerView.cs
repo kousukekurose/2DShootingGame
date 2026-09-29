@@ -17,8 +17,8 @@ namespace Presentation.Player
         [Header("Settings")]
         [SerializeField] private Game.Shared.Character.PlayerConfig playerConfig;
         public Game.Shared.Character.PlayerConfig PlayerConfig => playerConfig;
-        [SerializeField] private Game.Shared.Character.CharacterStats defaultStats;
-        public Game.Shared.Character.CharacterStats DefaultStats => defaultStats;
+        //[SerializeField] private Domain.Character.CharacterStats defaultStats;
+        //public Domain.Character.CharacterStats DefaultStats => defaultStats;
 
         private Game.Player.Player _player;
         public Game.Player.Player Player => _player;

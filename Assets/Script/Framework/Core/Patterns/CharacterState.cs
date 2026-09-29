@@ -1,5 +1,3 @@
-using Framework.Core.Interfaces;
-using Presentation.Player;
 
 namespace Framework.Core.Patterns
 {
@@ -10,15 +8,13 @@ namespace Framework.Core.Patterns
     /// </summary>
     public abstract class CharacterState
     {
-        protected readonly ICharacter _character;
+        protected readonly Interfaces.ICharacter _character;
         protected readonly CharacterStateMachine _stateMachine;
-
-        protected readonly PlayerView _view;
 
         ///<summary>
         /// コンストラクタ
         /// </summary>
-        protected CharacterState(ICharacter character, CharacterStateMachine stateMachine)
+        protected CharacterState(Interfaces.ICharacter character, CharacterStateMachine stateMachine)
         {
             _character = character;
             _stateMachine = stateMachine;

@@ -44,6 +44,14 @@ namespace Application.Bullet
                 var bullet = _activeBullets[i];
                 bullet.Tick(deltaTime);
 
+                if(_bulletViewMap.TryGetValue(bullet, out var view))
+                {
+                    if(view != null)
+                    {
+                        view.transform.position = bullet.Position;
+                    }
+                }
+
                 if(!bullet.IsAlive)
                 {
                     RemoveBullet(bullet);

@@ -2,6 +2,7 @@ using VContainer;
 using VContainer.Unity;
 using UnityEngine;
 using MessagePipe;
+using Framework.Core.Events;
 
 namespace Framework.Core.DI
 {
@@ -28,23 +29,33 @@ namespace Framework.Core.DI
             {
                 var view = container.Resolve<Presentation.Player.PlayerView>();
                 var config = view.PlayerConfig;
+                var attackEventPublisher = container.Resolve<IPublisher<PlayerAttackEvent>>();
                 return new Game.Player.Player(
                     config.CharacterId,
-                    config.DefaultStats.Clone(),
-                    view.transform.position
+                    config.GetDefaultStats(),
+                    view.transform.position,
+                    attackEventPublisher
                 );
             },Lifetime.Singleton).As<Interfaces.ICharacter>().AsSelf().As<Interfaces.ITargetable>();
 
             builder.Register<Game.Bullet.BulletDataRegistry>(container =>
             {
-                var bulletDaraArray = Resources.LoadAll<Game.Bullet.BulletData>("Game/Data/BulletData");
+                var bulletDaraArray = Resources.LoadAll<Game.Bullet.BulletData>("Configs");
                 return new Game.Bullet.BulletDataRegistry(bulletDaraArray);
             },Lifetime.Singleton);
             builder.Register<Application.Bullet.IBulletFactory,Application.Bullet.BulletFactory>(Lifetime.Singleton);
             builder.Register<Application.Bullet.BulletManager>(Lifetime.Singleton);
 
             builder.Register<Application.Player.PlayerMoveUseCase>(Lifetime.Singleton);
-            builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);
+            builder.Register<Application.Player.PlayerAttackUseCase>(container =>
+            {
+                return new Application.Player.PlayerAttackUseCase(
+                    container.Resolve<Game.Player.Player>(),
+                    container.Resolve<Application.Bullet.IBulletFactory>(),
+                    container.Resolve<Application.Bullet.BulletManager>(),
+                    container.Resolve<ISubscriber<Events.PlayerAttackEvent>>()
+                );
+            }, Lifetime.Singleton);
             builder.Register<Application.Player.PlayerDamageUseCase>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<GamePlayerInitializer>();
@@ -61,19 +72,8 @@ namespace Framework.Core.DI
 
             // 敵UseCaseの登録
             builder.Register<Application.Enemy.EnemyMoveUseCase>(Lifetime.Transient);
-            builder.Register<Application.Enemy.EnemyAttackUseCase>(container =>
-            {
-                return new Application.Enemy.EnemyAttackUseCase(
-                    container.Resolve<Game.Enemy.Enemy>(),
-                    container.Resolve<Presentation.Enemy.EnemyView>(),
-                    container.Resolve<Application.Bullet.BulletFactory>(),
-                    container.Resolve<Application.Bullet.BulletManager>()
-                );
-            },Lifetime.Transient);
             builder.Register<Application.Enemy.EnemyDamageUseCase>(Lifetime.Transient);
-
             builder.Register<Application.Enemy.EnemyInitializer>(Lifetime.Transient);
-
             builder.Register<Application.Enemy.EnemySpawner>(Lifetime.Singleton);
             builder.RegisterEntryPoint<EnemySystemInitializer>();
         }
@@ -134,8 +134,10 @@ namespace Framework.Core.DI
         }
 
         public void Tick()
-        {   
+        {
             _damageUseCase.Update();
+            //var currentState = _player.StateMachine.GetCurrentState();
+            //Framework.Core.CustomLogger.Log($"[GamePlayerInitializer] Current state: {currentState?.GetType().Name ?? "null"}");
             _player.StateMachine.Update(Time.deltaTime);
         }
     }

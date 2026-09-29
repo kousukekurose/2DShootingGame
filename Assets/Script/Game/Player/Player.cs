@@ -1,31 +1,30 @@
 using UnityEngine;
-using Framework.Core.Interfaces;
-using Game.Shared.Character;
-using Framework.Core.Patterns;
 using MessagePipe;
 
 
 namespace Game.Player
 {
-    public class Player : ICharacter,IMovable,IAttacker,IDamageable,ITargetable
+    public class Player : Framework.Core.Interfaces.ICharacter,Framework.Core.Interfaces.IMovable,
+    Framework.Core.Interfaces.IAttacker,Framework.Core.Interfaces.IDamageable,
+    Framework.Core.Interfaces.ITargetable
     {
         private readonly string _characterId;
-        private readonly CharacterStats _stats;
-        private readonly CharacterStateMachine _stateMachine;
-        public CharacterStateMachine StateMachine => _stateMachine;
+        private readonly Domain.Character.CharacterStats _stats;
+        private readonly Framework.Core.Patterns.CharacterStateMachine _stateMachine;
+        public Framework.Core.Patterns.CharacterStateMachine StateMachine => _stateMachine;
 
 
         private bool _isActive = true;
         private bool _isInvincible = false;
         private float _currentHP;
         private float _attackCooldownTimer = 0f;
-        private ITargetable _attackTarget;
+        private Framework.Core.Interfaces.ITargetable _attackTarget;
         private Vector3 _currentPosition;
         private int _bulletIdCounter = 0;
         private IPublisher<Framework.Core.Events.PlayerAttackEvent> _attackEventPulisher;
         
         public string CharacterId => _characterId;
-        public CharacterStats Stats => _stats;
+        public Domain.Character.CharacterStats Stats => _stats;
         public bool IsActive => _isActive;
         public void Activate() => _isActive = true;
         private Vector3 _currentInputDirection = Vector3.zero;
@@ -46,7 +45,6 @@ namespace Game.Player
         }
 
         public Vector3 GetCurrentPosition() => _currentPosition;
-        public void SetMoveSpeed(float speed) => _stats.MoveSpeed = speed;
 
         //IAttacerの実装
         public float AttackPower => _stats.AttackPower; 
@@ -73,7 +71,7 @@ namespace Game.Player
             _attackEventPulisher?.Publish(attackEvent);
         }
 
-        public void SetAttackTarget(ITargetable target) => _attackTarget = target;
+        public void SetAttackTarget(Framework.Core.Interfaces.ITargetable target) => _attackTarget = target;
 
         //IDamageableの実装
         public float CurrentHP =>_currentHP;
@@ -81,7 +79,7 @@ namespace Game.Player
         public bool IsDead => _currentHP <= 0f;
 
         public bool IsInvincible => _isInvincible;
-        public void TakeDamage(float damage,DamageSource source)
+        public void TakeDamage(float damage,Framework.Core.Interfaces.DamageSource source)
         {
             if(IsDead || _isInvincible)return;
             float actalDamage = Mathf.Max(0f,damage - _stats.Defense);
@@ -119,13 +117,13 @@ namespace Game.Player
         }
         public void SetInvincibleState(bool invicible) => _isInvincible = invicible;
 
-        public Player(string characterId,CharacterStats stats,Vector3 initialPosition,IPublisher<Framework.Core.Events.PlayerAttackEvent> attackEventPublisher = null)
+        public Player(string characterId,Domain.Character.CharacterStats stats,Vector3 initialPosition,IPublisher<Framework.Core.Events.PlayerAttackEvent> attackEventPublisher = null)
         {
             _characterId = characterId;
             _stats = stats;
             _currentPosition = initialPosition;
             _currentHP = _stats.MaxHP;
-            _stateMachine = new CharacterStateMachine(this);
+            _stateMachine = new Framework.Core.Patterns.CharacterStateMachine(this);
             _attackEventPulisher = attackEventPublisher;
         }
 

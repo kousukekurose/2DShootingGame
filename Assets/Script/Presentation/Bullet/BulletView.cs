@@ -14,17 +14,17 @@ namespace Presentation.Bullet
 
         private void Update()
         {
-            if (_bullet == null)
-            {
-                return;
-            }
+            // if (_bullet == null)
+            // {
+            //     return;
+            // }
 
-            if (!_bullet.IsAlive)
+            if (!_bullet.IsAlive || _bullet == null)
             {
                 Destroy(gameObject);
                 return;
             }
-            _bullet.Tick(Time.deltaTime);
+            //_bullet.Tick(Time.deltaTime);
 
             transform.position = _bullet.Position;
         }

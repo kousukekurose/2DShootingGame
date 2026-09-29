@@ -10,7 +10,7 @@ namespace Game.Shared.Character
         public Framework.Core.Interfaces.EnemyType EnemyType = Framework.Core.Interfaces.EnemyType.Basic;
 
         [Header("States")]
-        public CharacterStats DefaultStats;
+        public CharacterStatsConfig DefaultStatsConfig;
 
         [Header("AI Settings")]
         public float DetectionRange = 10f;
@@ -28,7 +28,14 @@ namespace Game.Shared.Character
         public string ChaseAnimation = "Chase";
         public string AttackAnimation = "Attack";
         public string DamageAnimation = "Damage";
-        public string DeathAnimation = "Death";  
+        public string DeathAnimation = "Death"; 
+
+        public Domain.Character.CharacterStats GetDefaultStats()
+        {
+            return DefaultStatsConfig != null
+            ? DefaultStatsConfig.ToDomainStats()
+            : new Domain.Character.CharacterStats(100f,5f,10f,10f,0.5f,0f);
+        }
 
     }
 }

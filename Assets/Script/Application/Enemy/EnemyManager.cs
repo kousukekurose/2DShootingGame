@@ -28,6 +28,7 @@ namespace Application.Enemy
         {
             foreach(var enemy in _activeEnemies)
             {
+                enemy.UpdateCooldownTimer(deltaTime);
                 enemy.StateMachine.Update(deltaTime);
             }
         }

@@ -22,6 +22,7 @@ namespace Game.Enemy.EnemyState
 
             if(_enemy.CurrentTarget == null)
             {
+                Framework.Core.CustomLogger.Log("[EnemyAttackState] Out of range, changing to ChaseState");
                 ChangeState<EnemyIdleState>();
                 return;
             }
@@ -29,13 +30,15 @@ namespace Game.Enemy.EnemyState
             float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
             if(distance > _enemy.Stats.AttackRange)
             {
-                ChangeState<EnemyChaseState>();
+                ChangeState<EnemyMoveState>();
+                return;
             }
             
             if(_enemy.CanAttack)
             {
                 if(_enemy.CurrentTarget != null)
                 {
+                    Framework.Core.CustomLogger.Log("[EnemyAttackState] Attacking target");
                     _enemy.Attack(_enemy.CurrentTarget.Position, Domain.Bullet.BulletType.Normal);
                 }
             }

@@ -29,12 +29,14 @@ namespace Application.Enemy
 
         public Game.Enemy.Enemy CreateEnemy(Vector3 position,Framework.Core.Interfaces.EnemyType enemyType)
         {
-            var stats = _defaultConfig.DefaultStats.Clone();
+            var stats = _defaultConfig.GetDefaultStats();
+            var attackEventPublisher = _resolver.Resolve<IPublisher<Framework.Core.Events.EnemyAttackEvent>>();
             return new Game.Enemy.Enemy(
                 _defaultConfig.CharacterId,
                 stats,
                 position,
-                enemyType
+                enemyType,
+                attackEventPublisher
             );
         }
 

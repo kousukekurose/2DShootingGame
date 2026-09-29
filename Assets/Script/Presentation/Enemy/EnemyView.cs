@@ -20,8 +20,8 @@ namespace Presentation.Enemy
         [SerializeField] private Game.Shared.Character.EnemyConfig enemyConfig; 
         public Game.Shared.Character.EnemyConfig EnemyConfig => enemyConfig;
 
-        [SerializeField] private Game.Shared.Character.CharacterStats defaultStats;
-        public Game.Shared.Character.CharacterStats DefaultStats => defaultStats;
+        //[SerializeField] private Domain.Character.CharacterStats defaultStats;
+        //public Domain.Character.CharacterStats DefaultStats => defaultStats;
 
         private Game.Enemy.Enemy _enemy;
         public Game.Enemy.Enemy Enemy => _enemy;
@@ -29,6 +29,7 @@ namespace Presentation.Enemy
         private CompositeDisposable _disposable;
         private ISubscriber<Framework.Core.Events.EnemyDamageTakenEvent> _damageTakenSubscriber;
         private ISubscriber<Framework.Core.Events.EnemyStateChangedEvent> _stateChangedSubscriber;
+        private Application.Enemy.EnemyAttackUseCase _attackUseCase;
 
         private void Awake()
         {
@@ -51,6 +52,11 @@ namespace Presentation.Enemy
         public void InitializeEnemy(Game.Enemy.Enemy enemy)
         {
             _enemy = enemy;
+        }
+
+        public void SetAttackUseCase(Application.Enemy.EnemyAttackUseCase attackUseCase)
+        {
+            _attackUseCase = attackUseCase;
         }
 
         private void OnStateChanged(Framework.Core.Events.EnemyStateChangedEvent stateEvent)
@@ -123,6 +129,12 @@ namespace Presentation.Enemy
             {
                 UpdatePositionFromPhysics();
             }
+        }
+
+        private void OnDestroy()
+        {
+            _attackUseCase?.Dispose();
+            _disposable?.Dispose();
         }
     }
 }
