@@ -78,5 +78,10 @@ namespace Domain.Bullet
                 IsAlive = false;
             }
         }
+
+        public void Destroy()
+        {
+            IsAlive = false;
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace Framework.Core.DI
         [SerializeField] private Presentation.Player.PlayerInputReceiver playerInputReceiver;
         [SerializeField] private Game.Shared.Character.EnemyConfig enemyConfig;
         [SerializeField] private Application.Enemy.EnemySystemConfig enemySystemConfig;
+        //[SerializeField] private Application.Collision.CollisionManager collisionManager;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -38,6 +39,7 @@ namespace Framework.Core.DI
                 );
             },Lifetime.Singleton).As<Interfaces.ICharacter>().AsSelf().As<Interfaces.ITargetable>();
 
+            builder.Register<Application.Collision.CollisionManager>(Lifetime.Singleton);
             builder.Register<Game.Bullet.BulletDataRegistry>(container =>
             {
                 var bulletDaraArray = Resources.LoadAll<Game.Bullet.BulletData>("Configs");
@@ -138,6 +140,7 @@ namespace Framework.Core.DI
             _damageUseCase.Update();
             //var currentState = _player.StateMachine.GetCurrentState();
             //Framework.Core.CustomLogger.Log($"[GamePlayerInitializer] Current state: {currentState?.GetType().Name ?? "null"}");
+            _player.SetPosition(_playerView.transform.position);
             _player.StateMachine.Update(Time.deltaTime);
         }
     }
@@ -149,19 +152,22 @@ namespace Framework.Core.DI
         private readonly Application.Enemy.EnemyManager _enemyManager;
         private readonly Application.Enemy.EnemySystemConfig _config;
         private readonly Application.Bullet.BulletManager _bulletManager;
+        private readonly Application.Collision.CollisionManager _collisionManager;
 
         public EnemySystemInitializer(
             Application.Enemy.EnemyPrefabRegistry prefabRegistry,
             Application.Enemy.EnemySpawner enemySpawner,
             Application.Enemy.EnemyManager enemyManager,
             Application.Enemy.EnemySystemConfig config,
-            Application.Bullet.BulletManager bulletManager)
+            Application.Bullet.BulletManager bulletManager,
+            Application.Collision.CollisionManager collisionManager)
         {
             _prefabRegistry = prefabRegistry;
             _enemySpawner = enemySpawner;
             _enemyManager = enemyManager;
             _config = config;
             _bulletManager = bulletManager;
+            _collisionManager = collisionManager;
         }
 
         public void Start()
@@ -189,6 +195,7 @@ namespace Framework.Core.DI
         {
             _enemyManager.UpdateAll(Time.deltaTime);
             _bulletManager.Update(Time.deltaTime);
+            _collisionManager.Update(Time.deltaTime);
         }
     }
 

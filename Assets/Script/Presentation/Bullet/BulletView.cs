@@ -14,14 +14,10 @@ namespace Presentation.Bullet
 
         private void Update()
         {
-            // if (_bullet == null)
-            // {
-            //     return;
-            // }
 
             if (!_bullet.IsAlive || _bullet == null)
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
                 return;
             }
             //_bullet.Tick(Time.deltaTime);

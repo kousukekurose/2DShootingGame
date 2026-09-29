@@ -3,7 +3,7 @@ using MessagePipe;
 
 namespace Game.Enemy
 {
-    public class Enemy : Framework.Core.Interfaces.IEnemy
+    public class Enemy : Framework.Core.Interfaces.IEnemy,Framework.Core.Interfaces.ITargetable
     {
         private readonly string _enemyId;
         private readonly Domain.Character.CharacterStats _stats;
@@ -24,6 +24,8 @@ namespace Game.Enemy
         public Domain.Character.CharacterStats Stats => _stats;
         public bool IsActive => _isActive;
 
+        public bool IsValidTarget => IsActive && !IsDead;
+
         //IEnemyの実装
         public Framework.Core.Interfaces.EnemyType EnemyType => _enemyType;
         public Framework.Core.Interfaces.ITargetable CurrentTarget => _currentTarget;
@@ -37,6 +39,8 @@ namespace Game.Enemy
         }
 
         public Vector3 GetCurrentPosition() => _currentPosition;
+
+        public Vector3 Position => GetCurrentPosition();
 
         //IAttackの実装
         public float AttackPower => _stats.AttackPower;
@@ -123,6 +127,7 @@ namespace Game.Enemy
             _enemyType = enemyType;
             _stateMachine = new Framework.Core.Patterns.CharacterStateMachine(this);
             _attackEventPublisher = attackEventPublisher;
+            _currentHP = stats.MaxHP;
         }
     }
 

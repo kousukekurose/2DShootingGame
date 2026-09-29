@@ -26,6 +26,7 @@ namespace Application.Enemy
         {
             enemyView.InitializeEnemy(enemy);
             enemy.SetTarget(_playerTraget);
+            enemy.Activate();
 
             var idleState = new Game.Enemy.EnemyState.EnemyIdleState(enemy,enemy.StateMachine,_publisher);
             var moveState = new Game.Enemy.EnemyState.EnemyMoveState(enemy,enemy.StateMachine,_publisher);
