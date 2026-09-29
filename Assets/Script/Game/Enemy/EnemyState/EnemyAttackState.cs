@@ -20,22 +20,22 @@ namespace Game.Enemy.EnemyState
         {
             if(!_enemy.IsActive) return;
 
-            if(_enemy.CurrentTarget == null)
+            // 縦シューティング：攻撃中も下に移動
+            Vector3 downDirection = Vector3.down;
+            _enemy.Move(downDirection, deltaTime);
+
+            // 画面外に出たら削除
+            if(_enemy.GetCurrentPosition().y < -10f)
             {
-                Framework.Core.CustomLogger.Log("[EnemyAttackState] Out of range, changing to ChaseState");
-                ChangeState<EnemyIdleState>();
+                _enemy.Deactivate();
                 return;
             }
 
-            float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
-            if(distance > _enemy.Stats.AttackRange)
-            {
-                ChangeState<EnemyMoveState>();
-                return;
-            }
-            
+            Framework.Core.CustomLogger.Log($"[EnemyAttackState] CanAttack: {_enemy.CanAttack}");
+            // 攻撃クールダウンがあれば攻撃
             if(_enemy.CanAttack)
             {
+                // プレイヤーに向かって攻撃
                 if(_enemy.CurrentTarget != null)
                 {
                     Framework.Core.CustomLogger.Log("[EnemyAttackState] Attacking target");
