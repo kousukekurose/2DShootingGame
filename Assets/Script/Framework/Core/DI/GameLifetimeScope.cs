@@ -2,8 +2,9 @@ using VContainer;
 using VContainer.Unity;
 using UnityEngine;
 using MessagePipe;
+using Project.Framework.Core.Events;
 
-namespace Framework.Core.DI
+namespace Project.Framework.Core.DI
 {
     public class GameLifetimeScope : LifetimeScope
     {
@@ -12,6 +13,7 @@ namespace Framework.Core.DI
         [SerializeField] private Presentation.Player.PlayerInputReceiver playerInputReceiver;
         [SerializeField] private Game.Shared.Character.EnemyConfig enemyConfig;
         [SerializeField] private Application.Enemy.EnemySystemConfig enemySystemConfig;
+        //[SerializeField] private Application.Collision.CollisionManager collisionManager;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -28,15 +30,34 @@ namespace Framework.Core.DI
             {
                 var view = container.Resolve<Presentation.Player.PlayerView>();
                 var config = view.PlayerConfig;
+                var attackEventPublisher = container.Resolve<IPublisher<PlayerAttackEvent>>();
                 return new Game.Player.Player(
                     config.CharacterId,
-                    config.DefaultStats.Clone(),
-                    view.transform.position
+                    config.GetDefaultStats(),
+                    view.transform.position,
+                    attackEventPublisher
                 );
             },Lifetime.Singleton).As<Interfaces.ICharacter>().AsSelf().As<Interfaces.ITargetable>();
 
+            builder.Register<Application.Collision.CollisionManager>(Lifetime.Singleton);
+            builder.Register<Game.Bullet.BulletDataRegistry>(container =>
+            {
+                var bulletDaraArray = Resources.LoadAll<Game.Bullet.BulletData>("Configs");
+                return new Game.Bullet.BulletDataRegistry(bulletDaraArray);
+            },Lifetime.Singleton);
+            builder.Register<Application.Bullet.IBulletFactory,Application.Bullet.BulletFactory>(Lifetime.Singleton);
+            builder.Register<Application.Bullet.BulletManager>(Lifetime.Singleton);
+
             builder.Register<Application.Player.PlayerMoveUseCase>(Lifetime.Singleton);
-            builder.Register<Application.Player.PlayerAttackUseCase>(Lifetime.Singleton);
+            builder.Register<Application.Player.PlayerAttackUseCase>(container =>
+            {
+                return new Application.Player.PlayerAttackUseCase(
+                    container.Resolve<Game.Player.Player>(),
+                    container.Resolve<Application.Bullet.IBulletFactory>(),
+                    container.Resolve<Application.Bullet.BulletManager>(),
+                    container.Resolve<ISubscriber<Events.PlayerAttackEvent>>()
+                );
+            }, Lifetime.Singleton);
             builder.Register<Application.Player.PlayerDamageUseCase>(Lifetime.Singleton);
 
             builder.RegisterEntryPoint<GamePlayerInitializer>();
@@ -48,16 +69,17 @@ namespace Framework.Core.DI
             builder.RegisterComponent(enemyConfig);
             builder.RegisterComponent(enemySystemConfig);
             builder.Register<Application.Enemy.EnemyPrefabRegistry>(Lifetime.Singleton);
-            builder.Register<Application.Enemy.EnemyManager>(Lifetime.Singleton);
+            builder.Register<Application.Enemy.EnemyManager>(container =>
+            {
+                var prefabRegistry = container.Resolve<Application.Enemy.EnemyPrefabRegistry>();
+                return new Application.Enemy.EnemyManager(prefabRegistry);
+            },Lifetime.Singleton);
             builder.Register<Application.Enemy.EnemyFactory>(Lifetime.Singleton);
 
             // 敵UseCaseの登録
             builder.Register<Application.Enemy.EnemyMoveUseCase>(Lifetime.Transient);
-            builder.Register<Application.Enemy.EnemyAttackUseCase>(Lifetime.Transient);
             builder.Register<Application.Enemy.EnemyDamageUseCase>(Lifetime.Transient);
-
             builder.Register<Application.Enemy.EnemyInitializer>(Lifetime.Transient);
-
             builder.Register<Application.Enemy.EnemySpawner>(Lifetime.Singleton);
             builder.RegisterEntryPoint<EnemySystemInitializer>();
         }
@@ -118,8 +140,11 @@ namespace Framework.Core.DI
         }
 
         public void Tick()
-        {   
+        {
             _damageUseCase.Update();
+            //var currentState = _player.StateMachine.GetCurrentState();
+            //Framework.Core.CustomLogger.Log($"[GamePlayerInitializer] Current state: {currentState?.GetType().Name ?? "null"}");
+            _player.SetPosition(_playerView.transform.position);
             _player.StateMachine.Update(Time.deltaTime);
         }
     }
@@ -130,17 +155,23 @@ namespace Framework.Core.DI
         private readonly Application.Enemy.EnemySpawner _enemySpawner;
         private readonly Application.Enemy.EnemyManager _enemyManager;
         private readonly Application.Enemy.EnemySystemConfig _config;
+        private readonly Application.Bullet.BulletManager _bulletManager;
+        private readonly Application.Collision.CollisionManager _collisionManager;
 
         public EnemySystemInitializer(
             Application.Enemy.EnemyPrefabRegistry prefabRegistry,
             Application.Enemy.EnemySpawner enemySpawner,
             Application.Enemy.EnemyManager enemyManager,
-            Application.Enemy.EnemySystemConfig config)
+            Application.Enemy.EnemySystemConfig config,
+            Application.Bullet.BulletManager bulletManager,
+            Application.Collision.CollisionManager collisionManager)
         {
             _prefabRegistry = prefabRegistry;
             _enemySpawner = enemySpawner;
             _enemyManager = enemyManager;
             _config = config;
+            _bulletManager = bulletManager;
+            _collisionManager = collisionManager;
         }
 
         public void Start()
@@ -167,6 +198,8 @@ namespace Framework.Core.DI
         public void Tick()
         {
             _enemyManager.UpdateAll(Time.deltaTime);
+            _bulletManager.Update(Time.deltaTime);
+            _collisionManager.Update(Time.deltaTime);
         }
     }
 

@@ -1,11 +1,11 @@
 using UnityEngine;
 using MessagePipe;
 
-namespace Game.Enemy.EnemyState
+namespace Project.Game.Enemy.EnemyState
 {
-    public class EnemyChaseState : EnemyState
+    public class EnemyMoveState : EnemyState
     {
-        public EnemyChaseState(
+        public EnemyMoveState(
             Enemy enemy,
             Framework.Core.Patterns.CharacterStateMachine stateMachine,
             IPublisher<Framework.Core.Events.EnemyStateChangedEvent> stateChangedPublisher
@@ -24,17 +24,13 @@ namespace Game.Enemy.EnemyState
                 return;
             }
             
-            
-            float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
+            Vector3 downDirection = Vector3.down;
+            _enemy.Move(downDirection,deltaTime);
 
-            if(distance < _enemy.Stats.AttackRange)
+            if(_enemy.GetCurrentPosition().y < -10f)
             {
-                ChangeState<EnemyAttackState>();
-                return;
+                _enemy.Deactivate();
             }
-            
-            Vector3 direction = (_enemy.CurrentTarget.Position - _enemy.GetCurrentPosition()).normalized;
-            _enemy.Move(direction,deltaTime);
         }
     }
 }

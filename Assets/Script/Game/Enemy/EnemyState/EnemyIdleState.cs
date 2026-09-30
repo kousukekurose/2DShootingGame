@@ -1,7 +1,7 @@
 using MessagePipe;
 using UnityEngine;
 
-namespace Game.Enemy.EnemyState
+namespace Project.Game.Enemy.EnemyState
 {
     public class EnemyIdleState : EnemyState
     {
@@ -18,19 +18,13 @@ namespace Game.Enemy.EnemyState
 
         public override void Update(float deltaTime)
         {
-            if(_enemy.CurrentTarget != null)
-            {
-                float distance = Vector3.Distance(_enemy.GetCurrentPosition(),_enemy.CurrentTarget.Position);
-                if(distance < _enemy.Stats.AttackRange * 2f)
-                {
-                    ChangeState<EnemyChaseState>();
-                }
-            }
+            // 縦シューティング：即座に攻撃状態に遷移
+            ChangeState<EnemyAttackState>();
         }
 
         public override void OnDamageReceived(float damage)
         {
-            ChangeState<EnemyChaseState>();
+            ChangeState<EnemyMoveState>();
         }
     }
 }

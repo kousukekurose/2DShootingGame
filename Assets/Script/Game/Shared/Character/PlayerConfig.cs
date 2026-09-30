@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Shared.Character
+namespace Project.Game.Shared.Character
 {
     [CreateAssetMenu(fileName = "PlayerConfig",menuName = "Game/Player Config")]
     public class PlayerConfig : ScriptableObject
@@ -9,22 +9,21 @@ namespace Game.Shared.Character
         public string CharacterId = "Player001";
 
         [Header("States")]
-        public CharacterStats DefaultStats;
+        public CharacterStatsConfig DefaultStatsConfig;
 
-        [Header("GamePlay")]
-        public float MoveSpeed = 5f;
-        public float AttackRange = 5f;
-        public float AttackCooldown = 0.5f;
-        public float AttackPower = 10f;  
-        public float Defense = 0f;
-        public float MaxHP = 100f;  
-
-        [Header("Visual")]
+        [Header("Animation Names")]
         public string IdleAnimation = "Idle";
         public string MoveAnimation = "Move";
         public string AttackAnimation = "Attack";
         public string DamageAnimation = "Damage";
         public string DeathAnimation = "Death";  
+
+        public Domain.Character.CharacterStats GetDefaultStats()
+        {
+            return DefaultStatsConfig != null
+            ? DefaultStatsConfig.ToDomainStats()
+            : new Domain.Character.CharacterStats(100f,5f,10f,10f,0.5f,0f);
+        }
 
     }
 }

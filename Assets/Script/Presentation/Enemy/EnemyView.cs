@@ -2,8 +2,10 @@ using UnityEngine;
 using MessagePipe;
 using VContainer;
 using R3;
+using Cysharp.Threading.Tasks;
+using System;
 
-namespace Presentation.Enemy
+namespace Project.Presentation.Enemy
 {
     public class EnemyView : MonoBehaviour
     {
@@ -18,8 +20,8 @@ namespace Presentation.Enemy
         [SerializeField] private Game.Shared.Character.EnemyConfig enemyConfig; 
         public Game.Shared.Character.EnemyConfig EnemyConfig => enemyConfig;
 
-        [SerializeField] private Game.Shared.Character.CharacterStats defaultStats;
-        public Game.Shared.Character.CharacterStats DefaultStats => defaultStats;
+        //[SerializeField] private Domain.Character.CharacterStats defaultStats;
+        //public Domain.Character.CharacterStats DefaultStats => defaultStats;
 
         private Game.Enemy.Enemy _enemy;
         public Game.Enemy.Enemy Enemy => _enemy;
@@ -27,6 +29,8 @@ namespace Presentation.Enemy
         private CompositeDisposable _disposable;
         private ISubscriber<Framework.Core.Events.EnemyDamageTakenEvent> _damageTakenSubscriber;
         private ISubscriber<Framework.Core.Events.EnemyStateChangedEvent> _stateChangedSubscriber;
+        private Application.Enemy.EnemyAttackUseCase _attackUseCase;
+        private Application.Enemy.EnemyManager _enemyManager;
 
         private void Awake()
         {
@@ -49,6 +53,16 @@ namespace Presentation.Enemy
         public void InitializeEnemy(Game.Enemy.Enemy enemy)
         {
             _enemy = enemy;
+        }
+
+        public void SetAttackUseCase(Application.Enemy.EnemyAttackUseCase attackUseCase)
+        {
+            _attackUseCase = attackUseCase;
+        }
+
+        public void SetEnemyManager(Application.Enemy.EnemyManager enemyManager)
+        {
+            _enemyManager = enemyManager;
         }
 
         private void OnStateChanged(Framework.Core.Events.EnemyStateChangedEvent stateEvent)
@@ -80,6 +94,18 @@ namespace Presentation.Enemy
         private void OnDamageTaken(Framework.Core.Events.EnemyDamageTakenEvent damageEvent)
         {
             SetColor(Color.red);
+            ResetColorAfterDelay().Forget();
+        }
+
+        private async UniTaskVoid ResetColorAfterDelay()
+        {
+            try
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.2f));
+                SetColor(Color.white);
+                
+            }
+            catch(OperationCanceledException){}
         }
 
         public void UpdatePositionFromPhysics()
@@ -108,6 +134,16 @@ namespace Presentation.Enemy
             if(_enemy != null && _enemy.IsActive)
             {
                 UpdatePositionFromPhysics();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            _attackUseCase?.Dispose();
+            _disposable?.Dispose();
+            if(_enemyManager != null && _enemy != null)
+            {
+                _enemyManager.ReturnEnemyViewToPool(_enemy.EnemyType,gameObject);
             }
         }
     }

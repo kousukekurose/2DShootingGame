@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     [CreateAssetMenu(fileName ="EnemySystemConfig",menuName ="Game/Enemy Sysytem Config")]
     public class EnemySystemConfig : ScriptableObject

@@ -1,11 +1,12 @@
 using UnityEngine;
+using MessagePipe;
 
-namespace Game.Enemy
+namespace Project.Game.Enemy
 {
-    public class Enemy : Framework.Core.Interfaces.IEnemy
+    public class Enemy : Framework.Core.Interfaces.IEnemy,Framework.Core.Interfaces.ITargetable
     {
         private readonly string _enemyId;
-        private readonly Shared.Character.CharacterStats _stats;
+        private readonly Domain.Character.CharacterStats _stats;
         private readonly Framework.Core.Patterns.CharacterStateMachine _stateMachine;
         private readonly Framework.Core.Interfaces.EnemyType _enemyType;
 
@@ -16,11 +17,14 @@ namespace Game.Enemy
         private Framework.Core.Interfaces.ITargetable _currentTarget;
         private Vector3 _currentPosition;
         private bool _aiEnable = true;
+        private IPublisher<Framework.Core.Events.EnemyAttackEvent> _attackEventPublisher;
 
         //ICharacterの実装
         public string CharacterId => _enemyId;
-        public Shared.Character.CharacterStats Stats => _stats;
+        public Domain.Character.CharacterStats Stats => _stats;
         public bool IsActive => _isActive;
+
+        public bool IsValidTarget => IsActive && !IsDead;
 
         //IEnemyの実装
         public Framework.Core.Interfaces.EnemyType EnemyType => _enemyType;
@@ -29,22 +33,37 @@ namespace Game.Enemy
         //IMoveの実装
         public void Move(Vector3 direction,float deltaTime)
         {
+            Framework.Core.CustomLogger.Log($"{_isActive}と{_aiEnable}の確認");
             if(!_isActive || !_aiEnable) return;
             _currentPosition += direction * _stats.MoveSpeed * deltaTime;
         }
 
         public Vector3 GetCurrentPosition() => _currentPosition;
-        public void SetMoveSpeed(float speed) =>_stats.MoveSpeed = speed;
+
+        public Vector3 Position => GetCurrentPosition();
 
         //IAttackの実装
         public float AttackPower => _stats.AttackPower;
         public float AttackRange => _stats.AttackRange;
-        public float AttackCooldown => _attackCooldownTimer;
+        public float AttackCooldown => _stats.AttackCooldown;
         public bool CanAttack => _attackCooldownTimer <= 0f && _isActive;
-        public void Attack(Vector3 targetPosition)
+        public void Attack(Vector3 targetPosition, Domain.Bullet.BulletType bulletType)
         {
             if(!CanAttack) return;
             _attackCooldownTimer = _stats.AttackCooldown;
+
+            var attackEvent = new Framework.Core.Events.EnemyAttackEvent
+            {
+                EnemyId = _enemyId,
+                EnemyType = _enemyType,
+                AttackPosition = _currentPosition,
+                TargetDirection = (targetPosition - _currentPosition).normalized,
+                AttackPower = _stats.AttackPower,
+                Timestamp = Time.time,
+                BulletType = bulletType
+            };
+
+            _attackEventPublisher?.Publish(attackEvent);
         }
         
 
@@ -55,6 +74,15 @@ namespace Game.Enemy
         public float MaxHP => _stats.MaxHP;
         public bool IsDead => _currentHP <= 0f;
         public bool IsInvincible => _isInvincible;
+
+        public enum DeathReason
+        {
+            PlayerDamage,
+            Environment,
+            Timeout
+        }
+        private DeathReason _deathReason;
+        public DeathReason DeathEvent => _deathReason;
         public void TakeDamage(float damage, Framework.Core.Interfaces.DamageSource source)
         {
             if(IsDead || _isInvincible) return;
@@ -63,8 +91,16 @@ namespace Game.Enemy
             if(_currentHP <= 0f)
             {
                 _currentHP = 0f;
+                _deathReason = DeathReason.PlayerDamage;
                 OnDeath();
             }
+        }
+
+        public void KillByEnvironment()
+        {
+            _currentHP = 0f;
+            _deathReason = DeathReason.Environment;
+            OnDeath();
         }
         
         public void Heal(float amount)
@@ -100,13 +136,15 @@ namespace Game.Enemy
             }
         }
 
-        public Enemy(string enemyId,Shared.Character.CharacterStats stats,Vector3 initialPosition,Framework.Core.Interfaces.EnemyType enemyType)
+        public Enemy(string enemyId,Domain.Character.CharacterStats stats,Vector3 initialPosition,Framework.Core.Interfaces.EnemyType enemyType, IPublisher<Framework.Core.Events.EnemyAttackEvent> attackEventPublisher = null)
         {
             _enemyId = enemyId;
             _stats = stats;
             _currentPosition = initialPosition;
             _enemyType = enemyType;
             _stateMachine = new Framework.Core.Patterns.CharacterStateMachine(this);
+            _attackEventPublisher = attackEventPublisher;
+            _currentHP = stats.MaxHP;
         }
     }
 

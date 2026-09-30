@@ -17,8 +17,8 @@ MonoBehaviour:
   DefaultStats:
     MaxHP: 100
     MoveSpeed: 5
-    AttackPower: 10
-    AttackRange: 10
+    AttackPower: 5
+    AttackRange: 2
     AttackCooldown: 0.5
     Defense: 0
   DetectionRange: 10

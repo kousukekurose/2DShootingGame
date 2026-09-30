@@ -1,7 +1,7 @@
 using MessagePipe;
 using UnityEngine;
 
-namespace Game.Player.PlayerState
+namespace Project.Game.Player.PlayerState
 {
     public class PlayerMoveState : PlayerState
     {

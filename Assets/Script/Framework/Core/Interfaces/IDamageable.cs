@@ -1,5 +1,5 @@
 
-namespace Framework.Core.Interfaces
+namespace Project.Framework.Core.Interfaces
 {
     /// <summary>
     /// ダメージを受ける機能のインターフェース

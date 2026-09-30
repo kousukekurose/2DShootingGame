@@ -2,18 +2,18 @@ using UnityEngine;
 using MessagePipe;
 using VContainer;
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemyFactory
     {
-        private readonly Game.Shared.Character.EnemyConfig _defaultConfig;
+        private readonly Project.Game.Shared.Character.EnemyConfig _defaultConfig;
         private readonly IPublisher<Framework.Core.Events.EnemyStateChangedEvent> _publisher;
         private readonly EnemyPrefabRegistry _prefabRegistry;
         private readonly IObjectResolver _resolver;
         private readonly EnemyManager _enemyManager;
 
         public EnemyFactory(
-            Game.Shared.Character.EnemyConfig defaultConfig,
+            Project.Game.Shared.Character.EnemyConfig defaultConfig,
             IPublisher<Framework.Core.Events.EnemyStateChangedEvent> publisher,
             EnemyPrefabRegistry prefabRegistry,
             IObjectResolver resolver,
@@ -27,51 +27,40 @@ namespace Application.Enemy
             _enemyManager = enemyManager;
         }
 
-        public Game.Enemy.Enemy CreateEnemy(Vector3 position,Framework.Core.Interfaces.EnemyType enemyType)
+        public Project.Game.Enemy.Enemy CreateEnemy(Vector3 position,Framework.Core.Interfaces.EnemyType enemyType)
         {
-            var stats = _defaultConfig.DefaultStats.Clone();
-            var enemy = new Game.Enemy.Enemy(
+            var stats = _defaultConfig.GetDefaultStats();
+            var attackEventPublisher = _resolver.Resolve<IPublisher<Framework.Core.Events.EnemyAttackEvent>>();
+            return new Project.Game.Enemy.Enemy(
                 _defaultConfig.CharacterId,
                 stats,
                 position,
-                enemyType
+                enemyType,
+                attackEventPublisher
             );
-            return enemy;
         }
 
         public Presentation.Enemy.EnemyView SpawnEnemy(
             Vector3 position,Framework.Core.Interfaces.EnemyType enemyType
         )
         {
-            var prefab = _prefabRegistry.GetPrefab(enemyType);
-            if(prefab == null)
+            var enemyView = _enemyManager.GetEnemyViewFromPool(enemyType);
+            if(enemyView == null)
             {
                 Framework.Core.CustomLogger.LogError($"Failed to spawn enemy: no prefab for {enemyType}");
                 return null;
             }
 
-            var enemyObject = Object.Instantiate(prefab,position,Quaternion.identity);
-            var enemyView = enemyObject.GetComponent<Presentation.Enemy.EnemyView>();
-
-            if(enemyView == null)
-            {
-                Framework.Core.CustomLogger.LogError("Spawned object has no EnemyView component");
-                Object.Destroy(enemyObject);
-                return null;
-            }
-
-            //DIコンテナから注入
-            _resolver.Inject(enemyView);
             //Game層のEnemy作成
             var enemy = CreateEnemy(position,enemyType);
             enemyView.InitializeEnemy(enemy);
 
             //敵マネージャーに登録
             _enemyManager.RegisterEnemy(enemy);
+            _enemyManager.RegisterEnemyView(enemy.CharacterId, enemyView);
 
-            Framework.Core.CustomLogger.Log($"Spawned {enemyType} enemy at {position}");
             var initializer =  _resolver.Resolve<EnemyInitializer>();
-            initializer.Initialize(enemy, enemyView);
+            initializer.Initialize(enemy,enemyView);
 
             return enemyView;
 

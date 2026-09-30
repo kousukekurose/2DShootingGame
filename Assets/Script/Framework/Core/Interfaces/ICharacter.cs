@@ -1,5 +1,5 @@
 
-namespace Framework.Core.Interfaces
+namespace Project.Framework.Core.Interfaces
 {
     /// <summary>
     /// 全キャラクターの基本インターフェース
@@ -15,7 +15,7 @@ namespace Framework.Core.Interfaces
         ///<summary>
         /// キャラクターステータス情報(Hp,移動速度、攻撃力など)
         /// </summary>
-        Game.Shared.Character.CharacterStats Stats{get;}
+        Domain.Character.CharacterStats Stats{get;}
 
         ///<summary>
         /// キャラクターがアクティブかどうか

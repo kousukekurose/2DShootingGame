@@ -1,7 +1,7 @@
 using System.Diagnostics;
 
 
-namespace Framework.Core
+namespace Project.Framework.Core
 {
     public static class CustomLogger
     {

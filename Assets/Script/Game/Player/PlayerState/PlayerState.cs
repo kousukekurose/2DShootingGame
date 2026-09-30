@@ -1,7 +1,7 @@
 
 using MessagePipe;
 
-namespace Game.Player.PlayerState
+namespace Project.Game.Player.PlayerState
 {
     public abstract class PlayerState : Framework.Core.Patterns.CharacterState
     {

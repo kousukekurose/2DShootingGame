@@ -1,9 +1,10 @@
 
-using System.Numerics;
-using Framework.Core.Interfaces;
-using Game.Player.PlayerState;
+using UnityEngine;
+using Project.Framework.Core.Interfaces;
+using Project.Game.Player.PlayerState;
+using Project.Game.Bullet;
 
-namespace Framework.Core.Events
+namespace Project.Framework.Core.Events
 {
     public class PlayerStateChangedEvent
     {
@@ -26,10 +27,15 @@ namespace Framework.Core.Events
         public Vector3 Newposition {get; set;}
     }
 
-    public class PlaterAttackEvent
+    public class PlayerAttackEvent
     {
-        public Vector3 TaragetPosition {get; set;}
-        public bool Hit {get; set;}
+        public string PlayerId{get; set; }
+        public Vector3 AttackPosition{get; set; }
+        public Vector3 TargetDirection {get; set; }
+        public float AttackPower {get; set; }
+        public float Timestamp {get; set; }
+        public int BulletId{get; set;}
+        public Domain.Bullet.BulletType BulletType { get; set; } 
     } 
 
     public class PlayerDeathEvent

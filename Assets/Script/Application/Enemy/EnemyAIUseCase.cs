@@ -1,16 +1,16 @@
 using UnityEngine;
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemyAIUseCase
     {
-        private readonly Game.Enemy.Enemy _enemy;
+        private readonly Project.Game.Enemy.Enemy _enemy;
         private readonly EnemyMoveUseCase _moveUseCase;
         private readonly EnemyAttackUseCase _attackUseCase;
         private readonly Framework.Core.Interfaces.ITargetable _playerTarget;
 
         public EnemyAIUseCase(
-        Game.Enemy.Enemy enemy,
+        Project.Game.Enemy.Enemy enemy,
         EnemyMoveUseCase moveUseCase,
         EnemyAttackUseCase attackUseCase,
         Framework.Core.Interfaces.ITargetable playerTarget)

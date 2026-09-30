@@ -3,15 +3,15 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace Application.Player
+namespace Project.Application.Player
 {
     public class PlayerDamageUseCase
     {
-        private readonly Game.Player.Player _player;
+        private readonly Project.Game.Player.Player _player;
         private readonly Presentation.Player.PlayerView _playerView;
         private bool _isInvincibleTaskRunning = false;
 
-        public PlayerDamageUseCase(Game.Player.Player player,Presentation.Player.PlayerView playerView)
+        public PlayerDamageUseCase(Project.Game.Player.Player player,Presentation.Player.PlayerView playerView)
         {
             _player = player ?? throw new ArgumentNullException(nameof(player));
             _playerView = playerView ?? throw new ArgumentNullException(nameof(playerView));

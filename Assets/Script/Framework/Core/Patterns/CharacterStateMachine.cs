@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System;
-using Framework.Core.Interfaces;
+using Project.Framework.Core.Interfaces;
 
-namespace Framework.Core.Patterns
+namespace Project.Framework.Core.Patterns
 {
     /// <summary>
     /// キャラクターステートマシン

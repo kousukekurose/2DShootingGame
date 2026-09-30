@@ -1,18 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using R3;
+using System.Security.Cryptography;
 
-namespace Presentation.Player
+namespace Project.Presentation.Player
 {
     public class PlayerInputReceiver : MonoBehaviour
     {
         private InputSystem_Actions _input;
 
         private readonly ReactiveProperty<Vector3> _moveDirection = new(Vector3.zero);
-        private readonly Subject<Unit> _attackSubject = new();
-
         public ReactiveProperty<Vector3> MoveDirection => _moveDirection;
-        public Subject<Unit> OnAttackRequested => _attackSubject;
 
         private Application.Player.PlayerMoveUseCase _moveUseCase;
         private Application.Player.PlayerAttackUseCase _attackUseCase;
@@ -64,13 +62,24 @@ namespace Presentation.Player
 
         private void OnAttackStarted(InputAction.CallbackContext context)
         {
-            _attackSubject.OnNext(Unit.Default);
+            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] Attack button pressed");
+            if(_isInitialized && _attackUseCase != null)
+            {
+                Vector3 attackDirection = Vector3.up;
+                Vector3 targetPosition = _moveUseCase.GetCurrentPosition() + attackDirection * 10f;
+
+                Framework.Core.CustomLogger.Log($"[PlayerInputReceiver] Calling AttackUseCase.Attack with target: {targetPosition}");
+                _attackUseCase.Attack(targetPosition);
+            }
+            else
+            {
+                Framework.Core.CustomLogger.Log($"[PlayerInputReceiver] AttackUseCase is null: {_attackUseCase == null}, Initialized: {_isInitialized}");
+            }
         }
 
         private void OnDestroy()
         {
             _moveDirection.Dispose();
-            _attackSubject.Dispose();
         }
     }
 }

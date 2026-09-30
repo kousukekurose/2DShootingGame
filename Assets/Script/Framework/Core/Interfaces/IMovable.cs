@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Framework.Core.Interfaces
+namespace Project.Framework.Core.Interfaces
 {
     /// <summary>
     /// 移動可能なオブジェクトのインターフェース
@@ -19,11 +19,5 @@ namespace Framework.Core.Interfaces
         ///</summary>
         /// <returns>現在のワールド座標</returns>
         Vector3 GetCurrentPosition();
-
-        /// <summary>
-        /// 移動速度を設定する
-        /// </summary>
-        /// <param name="speed">新しい移動速度</param>
-        void SetMoveSpeed(float speed);
     }
 }
