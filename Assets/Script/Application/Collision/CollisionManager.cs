@@ -41,7 +41,9 @@ namespace Application.Collision
                         if(!enemy.IsActive || enemy.IsDead) continue;
                         if(IsCollision(bullet, enemy))
                         {
+                            Framework.Core.CustomLogger.Log($"[CollisionManager] Bullet hit enemy. Enemy HP: {enemy.CurrentHP}/{enemy.MaxHP}, Bullet Damage: {bullet.Damage}");
                             enemy.TakeDamage(bullet.Damage, Framework.Core.Interfaces.DamageSource.Player);
+                            Framework.Core.CustomLogger.Log($"[CollisionManager] After damage. Enemy HP: {enemy.CurrentHP}, IsDead: {enemy.IsDead}");
                             bullet.Destroy();
                             break;
                         }
@@ -52,6 +54,7 @@ namespace Application.Collision
                 {
                     if(IsCollision(bullet, _player))
                     {
+                        Framework.Core.CustomLogger.Log($"[CollisionManager] Enemy bullet hit player. Player HP: {_player.CurrentHP}/{_player.MaxHP}, Bullet Damage: {bullet.Damage}");
                         _player.TakeDamage(bullet.Damage, Framework.Core.Interfaces.DamageSource.Enemy);
                         bullet.Destroy();
                     }

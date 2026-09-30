@@ -69,7 +69,11 @@ namespace Framework.Core.DI
             builder.RegisterComponent(enemyConfig);
             builder.RegisterComponent(enemySystemConfig);
             builder.Register<Application.Enemy.EnemyPrefabRegistry>(Lifetime.Singleton);
-            builder.Register<Application.Enemy.EnemyManager>(Lifetime.Singleton);
+            builder.Register<Application.Enemy.EnemyManager>(container =>
+            {
+                var prefabRegistry = container.Resolve<Application.Enemy.EnemyPrefabRegistry>();
+                return new Application.Enemy.EnemyManager(prefabRegistry);
+            },Lifetime.Singleton);
             builder.Register<Application.Enemy.EnemyFactory>(Lifetime.Singleton);
 
             // 敵UseCaseの登録

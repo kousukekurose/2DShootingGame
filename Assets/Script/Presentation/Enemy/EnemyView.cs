@@ -30,6 +30,7 @@ namespace Presentation.Enemy
         private ISubscriber<Framework.Core.Events.EnemyDamageTakenEvent> _damageTakenSubscriber;
         private ISubscriber<Framework.Core.Events.EnemyStateChangedEvent> _stateChangedSubscriber;
         private Application.Enemy.EnemyAttackUseCase _attackUseCase;
+        private Application.Enemy.EnemyManager _enemyManager;
 
         private void Awake()
         {
@@ -57,6 +58,11 @@ namespace Presentation.Enemy
         public void SetAttackUseCase(Application.Enemy.EnemyAttackUseCase attackUseCase)
         {
             _attackUseCase = attackUseCase;
+        }
+
+        public void SetEnemyManager(Application.Enemy.EnemyManager enemyManager)
+        {
+            _enemyManager = enemyManager;
         }
 
         private void OnStateChanged(Framework.Core.Events.EnemyStateChangedEvent stateEvent)
@@ -135,6 +141,10 @@ namespace Presentation.Enemy
         {
             _attackUseCase?.Dispose();
             _disposable?.Dispose();
+            if(_enemyManager != null && _enemy != null)
+            {
+                _enemyManager.ReturnEnemyViewToPool(_enemy.EnemyType,gameObject);
+            }
         }
     }
 }

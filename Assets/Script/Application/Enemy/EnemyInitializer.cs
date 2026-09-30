@@ -25,6 +25,7 @@ namespace Application.Enemy
         public void Initialize(Game.Enemy.Enemy enemy, Presentation.Enemy.EnemyView enemyView) 
         {
             enemyView.InitializeEnemy(enemy);
+            enemyView.SetEnemyManager(_resolver.Resolve<Application.Enemy.EnemyManager>());
             enemy.SetTarget(_playerTraget);
             enemy.Activate();
 

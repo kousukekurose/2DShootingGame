@@ -74,6 +74,15 @@ namespace Game.Enemy
         public float MaxHP => _stats.MaxHP;
         public bool IsDead => _currentHP <= 0f;
         public bool IsInvincible => _isInvincible;
+
+        public enum DeathReason
+        {
+            PlayerDamage,
+            Environment,
+            Timeout
+        }
+        private DeathReason _deathReason;
+        public DeathReason DeathEvent => _deathReason;
         public void TakeDamage(float damage, Framework.Core.Interfaces.DamageSource source)
         {
             if(IsDead || _isInvincible) return;
@@ -82,8 +91,16 @@ namespace Game.Enemy
             if(_currentHP <= 0f)
             {
                 _currentHP = 0f;
+                _deathReason = DeathReason.PlayerDamage;
                 OnDeath();
             }
+        }
+
+        public void KillByEnvironment()
+        {
+            _currentHP = 0f;
+            _deathReason = DeathReason.Environment;
+            OnDeath();
         }
         
         public void Heal(float amount)

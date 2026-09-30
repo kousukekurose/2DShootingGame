@@ -44,20 +44,10 @@ namespace Application.Enemy
             Vector3 position,Framework.Core.Interfaces.EnemyType enemyType
         )
         {
-            var prefab = _prefabRegistry.GetPrefab(enemyType);
-            if(prefab == null)
-            {
-                Framework.Core.CustomLogger.LogError($"Failed to spawn enemy: no prefab for {enemyType}");
-                return null;
-            }
-
-            var enemyObject = Object.Instantiate(prefab,position,Quaternion.identity);
-            var enemyView = enemyObject.GetComponent<Presentation.Enemy.EnemyView>();
-
+            var enemyView = _enemyManager.GetEnemyViewFromPool(enemyType);
             if(enemyView == null)
             {
-                Framework.Core.CustomLogger.LogError("Spawned object has no EnemyView component");
-                Object.Destroy(enemyObject);
+                Framework.Core.CustomLogger.LogError($"Failed to spawn enemy: no prefab for {enemyType}");
                 return null;
             }
 
@@ -67,6 +57,7 @@ namespace Application.Enemy
 
             //敵マネージャーに登録
             _enemyManager.RegisterEnemy(enemy);
+            _enemyManager.RegisterEnemyView(enemy.CharacterId, enemyView);
 
             var initializer =  _resolver.Resolve<EnemyInitializer>();
             initializer.Initialize(enemy,enemyView);
