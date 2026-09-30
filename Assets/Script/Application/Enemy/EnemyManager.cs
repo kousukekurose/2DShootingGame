@@ -5,12 +5,12 @@ using Unity.AI.Navigation.LowLevel;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemyManager
     {
-        private readonly List<Game.Enemy.Enemy> _activeEnemies = new List<Game.Enemy.Enemy>();
-        private readonly Dictionary<int,Game.Enemy.Enemy> _enemyRegistry = new Dictionary<int, Game.Enemy.Enemy>();
+        private readonly List<Project.Game.Enemy.Enemy> _activeEnemies = new List<Project.Game.Enemy.Enemy>();
+        private readonly Dictionary<int,Project.Game.Enemy.Enemy> _enemyRegistry = new Dictionary<int, Project.Game.Enemy.Enemy>();
         private readonly Dictionary<string, Presentation.Enemy.EnemyView> _enemyViewMap = new Dictionary<string, Presentation.Enemy.EnemyView>();
         private readonly EnemyPrefabRegistry _prefabRegistry;
         private readonly Dictionary<Framework.Core.Interfaces.EnemyType,ObjectPool<GameObject>> _enemyViewPools = new Dictionary<Framework.Core.Interfaces.EnemyType, ObjectPool<GameObject>>();
@@ -20,7 +20,7 @@ namespace Application.Enemy
         {
             _prefabRegistry = prefabRegistry;
         }
-        public void RegisterEnemy(Game.Enemy.Enemy enemy)
+        public void RegisterEnemy(Project.Game.Enemy.Enemy enemy)
         {
             _activeEnemies.Add(enemy);
             _enemyRegistry[enemy.GetHashCode()] = enemy;
@@ -31,7 +31,7 @@ namespace Application.Enemy
             _enemyViewMap[enemyId] = enemyView;
         }
 
-        public void UnregisterEnemy(Game.Enemy.Enemy enemy)
+        public void UnregisterEnemy(Project.Game.Enemy.Enemy enemy)
         {
             _activeEnemies.Remove(enemy);
             _enemyRegistry.Remove(enemy.GetHashCode());
@@ -42,7 +42,7 @@ namespace Application.Enemy
             _enemyViewMap.Remove(enemyId);
         }
 
-        public IEnumerable<Game.Enemy.Enemy> GetActiveEnemies()
+        public IEnumerable<Project.Game.Enemy.Enemy> GetActiveEnemies()
         {
             return _activeEnemies;
         }

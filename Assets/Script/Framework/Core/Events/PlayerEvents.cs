@@ -1,10 +1,10 @@
 
 using UnityEngine;
-using Framework.Core.Interfaces;
-using Game.Player.PlayerState;
-using Game.Bullet;
+using Project.Framework.Core.Interfaces;
+using Project.Game.Player.PlayerState;
+using Project.Game.Bullet;
 
-namespace Framework.Core.Events
+namespace Project.Framework.Core.Events
 {
     public class PlayerStateChangedEvent
     {

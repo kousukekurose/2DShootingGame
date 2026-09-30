@@ -3,7 +3,7 @@ using R3;
 using UnityEngine;
 using VContainer;
 
-namespace Presentation.Player
+namespace Project.Presentation.Player
 {
     public class PlayerView : MonoBehaviour
     {

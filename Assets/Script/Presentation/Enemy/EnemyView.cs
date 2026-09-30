@@ -5,7 +5,7 @@ using R3;
 using Cysharp.Threading.Tasks;
 using System;
 
-namespace Presentation.Enemy
+namespace Project.Presentation.Enemy
 {
     public class EnemyView : MonoBehaviour
     {

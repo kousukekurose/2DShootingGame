@@ -1,5 +1,5 @@
 
-namespace Framework.Core.Interfaces
+namespace Project.Framework.Core.Interfaces
 {
     /// <summary>
     /// 全キャラクターの基本インターフェース

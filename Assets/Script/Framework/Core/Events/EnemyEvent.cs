@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Framework.Core.Events
+namespace Project.Framework.Core.Events
 {
     public class EnemyStateChangedEvent
     {

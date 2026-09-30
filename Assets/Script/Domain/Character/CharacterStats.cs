@@ -1,5 +1,5 @@
 
-namespace Domain.Character
+namespace Project.Domain.Character
 {
     /// <summary>
     /// ステータスを複製する

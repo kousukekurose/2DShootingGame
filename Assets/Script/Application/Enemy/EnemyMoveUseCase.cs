@@ -3,14 +3,14 @@ using System;
 using R3.Triggers;
 using UnityEngine;
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemyMoveUseCase
     {
-        private readonly Game.Enemy.Enemy _enemy;
+        private readonly Project.Game.Enemy.Enemy _enemy;
         private readonly Presentation.Enemy.EnemyView _enemyView;
 
-        public EnemyMoveUseCase(Game.Enemy.Enemy enemy, Presentation.Enemy.EnemyView enemyView)
+        public EnemyMoveUseCase(Project.Game.Enemy.Enemy enemy, Presentation.Enemy.EnemyView enemyView)
         {
             _enemy = enemy ?? throw new System.ArgumentException(nameof(enemy));
             _enemyView = enemyView ?? throw new System.ArgumentException(nameof(enemyView));

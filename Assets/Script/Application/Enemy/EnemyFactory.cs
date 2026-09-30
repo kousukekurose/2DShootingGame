@@ -2,18 +2,18 @@ using UnityEngine;
 using MessagePipe;
 using VContainer;
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemyFactory
     {
-        private readonly Game.Shared.Character.EnemyConfig _defaultConfig;
+        private readonly Project.Game.Shared.Character.EnemyConfig _defaultConfig;
         private readonly IPublisher<Framework.Core.Events.EnemyStateChangedEvent> _publisher;
         private readonly EnemyPrefabRegistry _prefabRegistry;
         private readonly IObjectResolver _resolver;
         private readonly EnemyManager _enemyManager;
 
         public EnemyFactory(
-            Game.Shared.Character.EnemyConfig defaultConfig,
+            Project.Game.Shared.Character.EnemyConfig defaultConfig,
             IPublisher<Framework.Core.Events.EnemyStateChangedEvent> publisher,
             EnemyPrefabRegistry prefabRegistry,
             IObjectResolver resolver,
@@ -27,11 +27,11 @@ namespace Application.Enemy
             _enemyManager = enemyManager;
         }
 
-        public Game.Enemy.Enemy CreateEnemy(Vector3 position,Framework.Core.Interfaces.EnemyType enemyType)
+        public Project.Game.Enemy.Enemy CreateEnemy(Vector3 position,Framework.Core.Interfaces.EnemyType enemyType)
         {
             var stats = _defaultConfig.GetDefaultStats();
             var attackEventPublisher = _resolver.Resolve<IPublisher<Framework.Core.Events.EnemyAttackEvent>>();
-            return new Game.Enemy.Enemy(
+            return new Project.Game.Enemy.Enemy(
                 _defaultConfig.CharacterId,
                 stats,
                 position,

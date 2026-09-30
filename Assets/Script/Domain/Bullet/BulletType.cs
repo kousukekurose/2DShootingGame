@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Domain.Bullet
+namespace Project.Domain.Bullet
 {
     public enum BulletType
     {

@@ -1,14 +1,14 @@
 using UnityEngine;
 using System;
 
-namespace Application.Player
+namespace Project.Application.Player
 {
     public class PlayerMoveUseCase
     {
-        private readonly Game.Player.Player _player;
+        private readonly Project.Game.Player.Player _player;
         private readonly Presentation.Player.PlayerView _playerView;
 
-        public PlayerMoveUseCase(Game.Player.Player player,Presentation.Player.PlayerView playerView)
+        public PlayerMoveUseCase(Project.Game.Player.Player player,Presentation.Player.PlayerView playerView)
         {
             _player = player ?? throw new ArgumentNullException(nameof(player));
             _playerView = playerView ?? throw new ArgumentNullException(nameof(playerView));

@@ -2,7 +2,7 @@ using UnityEngine;
 using VContainer;
 using MessagePipe;
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemySpawner
     {

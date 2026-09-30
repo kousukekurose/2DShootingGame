@@ -1,7 +1,7 @@
 using UnityEngine;
 using MessagePipe;
 
-namespace Game.Enemy
+namespace Project.Game.Enemy
 {
     public class Enemy : Framework.Core.Interfaces.IEnemy,Framework.Core.Interfaces.ITargetable
     {

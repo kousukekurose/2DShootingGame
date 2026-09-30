@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Shared.Character
+namespace Project.Game.Shared.Character
 {
     [CreateAssetMenu(fileName = "EnemyConfig",menuName = "Game/Enemy Config")]
     public class EnemyConfig : ScriptableObject

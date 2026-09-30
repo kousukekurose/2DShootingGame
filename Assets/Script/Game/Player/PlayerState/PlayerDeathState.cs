@@ -1,6 +1,6 @@
 using MessagePipe;
 
-namespace Game.Player.PlayerState
+namespace Project.Game.Player.PlayerState
 {
     public class PlayerDeathState : PlayerState
     {

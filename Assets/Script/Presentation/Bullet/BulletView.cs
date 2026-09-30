@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Presentation.Bullet
+namespace Project.Presentation.Bullet
 {
     public class BulletView : MonoBehaviour
     {

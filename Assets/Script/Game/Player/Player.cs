@@ -2,7 +2,7 @@ using UnityEngine;
 using MessagePipe;
 
 
-namespace Game.Player
+namespace Project.Game.Player
 {
     public class Player : Framework.Core.Interfaces.ICharacter,Framework.Core.Interfaces.IMovable,
     Framework.Core.Interfaces.IAttacker,Framework.Core.Interfaces.IDamageable,

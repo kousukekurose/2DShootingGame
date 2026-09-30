@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemyPrefabRegistry
     {

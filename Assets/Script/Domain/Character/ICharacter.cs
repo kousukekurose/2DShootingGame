@@ -1,6 +1,6 @@
 using R3;
 
-namespace Domain.Character
+namespace Project.Domain.Character
 {
     public interface ICharacter
     {

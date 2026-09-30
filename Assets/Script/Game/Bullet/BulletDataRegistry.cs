@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Bullet
+namespace Project.Game.Bullet
 {
     public class BulletDataRegistry
     {

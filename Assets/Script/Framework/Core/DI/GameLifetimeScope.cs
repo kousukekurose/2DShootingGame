@@ -2,9 +2,9 @@ using VContainer;
 using VContainer.Unity;
 using UnityEngine;
 using MessagePipe;
-using Framework.Core.Events;
+using Project.Framework.Core.Events;
 
-namespace Framework.Core.DI
+namespace Project.Framework.Core.DI
 {
     public class GameLifetimeScope : LifetimeScope
     {

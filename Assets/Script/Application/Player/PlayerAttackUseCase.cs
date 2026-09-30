@@ -3,18 +3,18 @@ using System;
 using MessagePipe;
 using R3;
 
-namespace Application.Player
+namespace Project.Application.Player
 {
     public class PlayerAttackUseCase
     {
-        private readonly Game.Player.Player _player;
+        private readonly Project.Game.Player.Player _player;
         private readonly Bullet.IBulletFactory _bulletFactory;
         private readonly Bullet.BulletManager _bulletManager;
         private readonly ISubscriber<Framework.Core.Events.PlayerAttackEvent> _attackEventSubscriber;
         private readonly CompositeDisposable _disposables;
 
         public PlayerAttackUseCase(
-            Game.Player.Player player,
+            Project.Game.Player.Player player,
             Bullet.IBulletFactory bulletFactory,
             Bullet.BulletManager bulletManager,
             ISubscriber<Framework.Core.Events.PlayerAttackEvent> attackEventSubscriber)

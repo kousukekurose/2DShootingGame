@@ -3,14 +3,14 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemyDamageUseCase
     {
-        private readonly Game.Enemy.Enemy _enemy;
+        private readonly Project.Game.Enemy.Enemy _enemy;
         private readonly Presentation.Enemy.EnemyView _enemyView;
 
-        public EnemyDamageUseCase(Game.Enemy.Enemy enemy,Presentation.Enemy.EnemyView enemyView)
+        public EnemyDamageUseCase(Project.Game.Enemy.Enemy enemy,Presentation.Enemy.EnemyView enemyView)
         {
             _enemy = enemy ?? throw new System.ArgumentException(nameof(enemy));
             _enemyView = enemyView ?? throw new System.ArgumentException(nameof(enemyView));

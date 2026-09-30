@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Framework.Core.Interfaces
+namespace Project.Framework.Core.Interfaces
 {
     /// <summary>
     /// 攻撃を行う機能のインターフェース

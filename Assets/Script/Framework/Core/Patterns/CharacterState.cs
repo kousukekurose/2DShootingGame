@@ -1,5 +1,5 @@
 
-namespace Framework.Core.Patterns
+namespace Project.Framework.Core.Patterns
 {
     /// <summary>
     /// キャラクターステートの基底クラス

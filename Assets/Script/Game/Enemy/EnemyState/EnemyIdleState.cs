@@ -1,7 +1,7 @@
 using MessagePipe;
 using UnityEngine;
 
-namespace Game.Enemy.EnemyState
+namespace Project.Game.Enemy.EnemyState
 {
     public class EnemyIdleState : EnemyState
     {

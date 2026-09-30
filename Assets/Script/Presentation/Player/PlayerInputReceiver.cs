@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using R3;
 using System.Security.Cryptography;
 
-namespace Presentation.Player
+namespace Project.Presentation.Player
 {
     public class PlayerInputReceiver : MonoBehaviour
     {

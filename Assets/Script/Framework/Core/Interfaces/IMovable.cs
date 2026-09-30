@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Framework.Core.Interfaces
+namespace Project.Framework.Core.Interfaces
 {
     /// <summary>
     /// 移動可能なオブジェクトのインターフェース

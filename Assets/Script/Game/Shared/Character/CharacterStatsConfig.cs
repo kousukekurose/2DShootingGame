@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Shared.Character
+namespace Project.Game.Shared.Character
 {
     [CreateAssetMenu(fileName = "CharacterStatsConfig", menuName = "Game/Character Stats Config")]
     public class CharacterStatsConfig : ScriptableObject

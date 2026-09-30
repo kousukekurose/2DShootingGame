@@ -2,11 +2,11 @@ using UnityEngine;
 using MessagePipe;
 using R3;
 
-namespace Application.Enemy
+namespace Project.Application.Enemy
 {
     public class EnemyAttackUseCase
     {
-        private readonly Game.Enemy.Enemy _enemy;
+        private readonly Project.Game.Enemy.Enemy _enemy;
         private readonly Presentation.Enemy.EnemyView _enemyView;
         private readonly Bullet.IBulletFactory _bulletFactory;
         private readonly Bullet.BulletManager _bulletManager;
@@ -14,7 +14,7 @@ namespace Application.Enemy
         private readonly CompositeDisposable _disposables;
 
         public EnemyAttackUseCase(
-            Game.Enemy.Enemy enemy,
+            Project.Game.Enemy.Enemy enemy,
             Presentation.Enemy.EnemyView enemyView,
             Bullet.IBulletFactory bulletFactory,
             Bullet.BulletManager bulletManager,

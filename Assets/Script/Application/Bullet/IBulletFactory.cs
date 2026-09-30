@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Application.Bullet
+namespace Project.Application.Bullet
 {
     public interface IBulletFactory
     {
@@ -14,9 +14,9 @@ namespace Application.Bullet
 
     public sealed class BulletFactory : IBulletFactory
     {
-        private readonly Game.Bullet.BulletDataRegistry _registry;
+        private readonly Project.Game.Bullet.BulletDataRegistry _registry;
 
-        public BulletFactory(Game.Bullet.BulletDataRegistry registry)
+        public BulletFactory(Project.Game.Bullet.BulletDataRegistry registry)
         {
             _registry = registry ?? throw new ArgumentNullException(nameof(registry));
         }

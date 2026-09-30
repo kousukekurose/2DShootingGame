@@ -1,5 +1,5 @@
 
-namespace Framework.Core.Interfaces
+namespace Project.Framework.Core.Interfaces
 {
     public interface IEnemy : ICharacter,IMovable,IAttacker,IDamageable
     {

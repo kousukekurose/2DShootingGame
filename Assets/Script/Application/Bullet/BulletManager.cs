@@ -2,17 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Application.Bullet
+namespace Project.Application.Bullet
 {
     public class BulletManager
     {
         private readonly List<Domain.Bullet.Bullet> _activeBullets = new List<Domain.Bullet.Bullet>();
         private readonly Dictionary<Domain.Bullet.Bullet,Presentation.Bullet.BulletView> _bulletViewMap = new Dictionary<Domain.Bullet.Bullet, Presentation.Bullet.BulletView>();
-        private readonly Game.Bullet.BulletDataRegistry _bulletDataRegistry;
+        private readonly Project.Game.Bullet.BulletDataRegistry _bulletDataRegistry;
         //オブジェクトプール
         private readonly Dictionary<Domain.Bullet.BulletType,ObjectPool<GameObject>> _bulletViewPools = new Dictionary<Domain.Bullet.BulletType, ObjectPool<GameObject>>();
         private Transform _bulletRootFolder;
-        public BulletManager(Game.Bullet.BulletDataRegistry bulletDataRegistry)
+        public BulletManager(Project.Game.Bullet.BulletDataRegistry bulletDataRegistry)
         {
             _bulletDataRegistry = bulletDataRegistry;
         }
