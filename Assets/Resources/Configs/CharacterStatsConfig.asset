@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: CharacterStatsConfig
   m_EditorClassIdentifier: Assembly-CSharp::Game.Shared.Character.CharacterStatsConfig
   maxHP: 100
-  moveSpeed: 10
+  moveSpeed: 3
   attackPower: 10
-  attackRange: 1
+  attackRange: 5
   attackCooldown: 1
   defense: 0

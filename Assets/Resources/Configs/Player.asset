@@ -13,19 +13,7 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: Assembly-CSharp::Game.Shared.Character.PlayerConfig
   CharacterId: Player001
-  DefaultStats:
-    MaxHP: 100
-    MoveSpeed: 5
-    AttackPower: 10
-    AttackRange: 10
-    AttackCooldown: 0.5
-    Defense: 0
-  MoveSpeed: 5
-  AttackRange: 5
-  AttackCooldown: 0.5
-  AttackPower: 10
-  Defense: 0
-  MaxHP: 100
+  DefaultStatsConfig: {fileID: 11400000, guid: 4ac246f9d22e344bb9cdf0c56f3f4595, type: 2}
   IdleAnimation: Idle
   MoveAnimation: Move
   AttackAnimation: Attack

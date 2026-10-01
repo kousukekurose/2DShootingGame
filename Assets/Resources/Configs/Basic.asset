@@ -14,16 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Shared.Character.EnemyConfig
   CharacterId: Enemy_001
   EnemyType: 0
-  DefaultStats:
-    MaxHP: 100
-    MoveSpeed: 5
-    AttackPower: 5
-    AttackRange: 2
-    AttackCooldown: 0.5
-    Defense: 0
+  DefaultStatsConfig: {fileID: 11400000, guid: 4ac246f9d22e344bb9cdf0c56f3f4595, type: 2}
   DetectionRange: 10
-  ChaseRange: 5
-  AttackRange: 2
+  ChaseRange: 4
+  AttackRange: 5
   AIUpdateInterval: 0.5
   Aggressive: 1
   RetreatOnLowHP: 0
