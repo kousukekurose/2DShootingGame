@@ -4,16 +4,16 @@ namespace Project.Application.Enemy
 {
     public class EnemyAIUseCase
     {
-        private readonly Project.Game.Enemy.Enemy _enemy;
+        private readonly Project.Domain.Enemy.Enemy _enemy;
         private readonly EnemyMoveUseCase _moveUseCase;
         private readonly EnemyAttackUseCase _attackUseCase;
-        private readonly Framework.Core.Interfaces.ITargetable _playerTarget;
+        private readonly Project.Domain.Character.ITargetable _playerTarget;
 
         public EnemyAIUseCase(
-        Project.Game.Enemy.Enemy enemy,
+        Project.Domain.Enemy.Enemy enemy,
         EnemyMoveUseCase moveUseCase,
         EnemyAttackUseCase attackUseCase,
-        Framework.Core.Interfaces.ITargetable playerTarget)
+        Project.Domain.Character.ITargetable playerTarget)
         {
             _enemy = enemy;
             _moveUseCase = moveUseCase;

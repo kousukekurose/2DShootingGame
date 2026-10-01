@@ -17,20 +17,20 @@ namespace Project.Presentation.Enemy
         [SerializeField] private Rigidbody2D rb2d;
 
         [Header("Settings")]
-        [SerializeField] private Game.Shared.Character.EnemyConfig enemyConfig; 
-        public Game.Shared.Character.EnemyConfig EnemyConfig => enemyConfig;
+        [SerializeField] private Project.Infrastructure.Unity.Config.EnemyConfig enemyConfig; 
+        public Project.Infrastructure.Unity.Config.EnemyConfig EnemyConfig => enemyConfig;
 
-        //[SerializeField] private Domain.Character.CharacterStats defaultStats;
-        //public Domain.Character.CharacterStats DefaultStats => defaultStats;
+        //[SerializeField] private Project.Domain.Character.CharacterStats defaultStats;
+        //public Project.Domain.Character.CharacterStats DefaultStats => defaultStats;
 
-        private Game.Enemy.Enemy _enemy;
-        public Game.Enemy.Enemy Enemy => _enemy;
+        private Project.Domain.Enemy.Enemy _enemy;
+        public Project.Domain.Enemy.Enemy Enemy => _enemy;
 
         private CompositeDisposable _disposable;
-        private ISubscriber<Framework.Core.Events.EnemyDamageTakenEvent> _damageTakenSubscriber;
-        private ISubscriber<Framework.Core.Events.EnemyStateChangedEvent> _stateChangedSubscriber;
+        private ISubscriber<Project.Application.Abstractions.Events.EnemyDamageTakenEvent> _damageTakenSubscriber;
+        private ISubscriber<Project.Presentation.Events.EnemyStateChangedEvent> _stateChangedSubscriber;
         private Application.Enemy.EnemyAttackUseCase _attackUseCase;
-        private Application.Enemy.EnemyManager _enemyManager;
+        private Project.Infrastructure.Unity.Enemy.EnemyManager _enemyManager;
 
         private void Awake()
         {
@@ -40,8 +40,8 @@ namespace Project.Presentation.Enemy
         }
 
         [Inject]
-        private void Construct(ISubscriber<Framework.Core.Events.EnemyDamageTakenEvent> damageTakenSubscriber,
-                                ISubscriber<Framework.Core.Events.EnemyStateChangedEvent>stateChangedSubscriber)
+        private void Construct(ISubscriber<Project.Application.Abstractions.Events.EnemyDamageTakenEvent> damageTakenSubscriber,
+                                ISubscriber<Project.Presentation.Events.EnemyStateChangedEvent> stateChangedSubscriber)
         {
             _damageTakenSubscriber = damageTakenSubscriber;
             _stateChangedSubscriber = stateChangedSubscriber;
@@ -50,7 +50,7 @@ namespace Project.Presentation.Enemy
             _disposable.Add(_stateChangedSubscriber.Subscribe(OnStateChanged));
         }
 
-        public void InitializeEnemy(Game.Enemy.Enemy enemy)
+        public void InitializeEnemy(Project.Domain.Enemy.Enemy enemy)
         {
             _enemy = enemy;
         }
@@ -60,15 +60,16 @@ namespace Project.Presentation.Enemy
             _attackUseCase = attackUseCase;
         }
 
-        public void SetEnemyManager(Application.Enemy.EnemyManager enemyManager)
+        public void SetEnemyManager(Project.Infrastructure.Unity.Enemy.EnemyManager enemyManager)
         {
             _enemyManager = enemyManager;
         }
 
-        private void OnStateChanged(Framework.Core.Events.EnemyStateChangedEvent stateEvent)
+        private void OnStateChanged(Project.Presentation.Events.EnemyStateChangedEvent stateEvent)
         {
+            if (_enemy == null || stateEvent.EnemyId != _enemy.CharacterId) return;
             string animationName = GetAnimationName(stateEvent.StateName);
-            Framework.Core.CustomLogger.Log("敵のアニメーションを受け取って再生");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log("敵のアニメーションを受け取って再生");
             //PlayAnimation(animationName);
         }
 
@@ -91,7 +92,7 @@ namespace Project.Presentation.Enemy
             }
         }
 
-        private void OnDamageTaken(Framework.Core.Events.EnemyDamageTakenEvent damageEvent)
+        private void OnDamageTaken(Project.Application.Abstractions.Events.EnemyDamageTakenEvent damageEvent)
         {
             SetColor(Color.red);
             ResetColorAfterDelay().Forget();

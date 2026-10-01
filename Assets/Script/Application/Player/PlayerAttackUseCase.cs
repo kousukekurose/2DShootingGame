@@ -7,21 +7,21 @@ namespace Project.Application.Player
 {
     public class PlayerAttackUseCase
     {
-        private readonly Project.Game.Player.Player _player;
-        private readonly Bullet.IBulletFactory _bulletFactory;
-        private readonly Bullet.BulletManager _bulletManager;
-        private readonly ISubscriber<Framework.Core.Events.PlayerAttackEvent> _attackEventSubscriber;
+        private readonly Project.Domain.Player.Player _player;
+        private readonly Project.Application.Abstractions.IBulletFactory _bulletFactory;
+        private readonly Project.Application.Abstractions.IBulletSpawner _bulletSpawner;
+        private readonly ISubscriber<Project.Application.Abstractions.Events.PlayerAttackEvent> _attackEventSubscriber;
         private readonly CompositeDisposable _disposables;
 
         public PlayerAttackUseCase(
-            Project.Game.Player.Player player,
-            Bullet.IBulletFactory bulletFactory,
-            Bullet.BulletManager bulletManager,
-            ISubscriber<Framework.Core.Events.PlayerAttackEvent> attackEventSubscriber)
+            Project.Domain.Player.Player player,
+            Project.Application.Abstractions.IBulletFactory bulletFactory,
+            Project.Application.Abstractions.IBulletSpawner bulletSpawner,
+            ISubscriber<Project.Application.Abstractions.Events.PlayerAttackEvent> attackEventSubscriber)
         {
             _player = player ?? throw new ArgumentNullException(nameof(player));
             _bulletFactory = bulletFactory ?? throw new ArgumentNullException(nameof(bulletFactory));
-            _bulletManager = bulletManager ?? throw new ArgumentNullException(nameof(bulletManager));
+            _bulletSpawner = bulletSpawner ?? throw new ArgumentNullException(nameof(bulletSpawner));
             _attackEventSubscriber = attackEventSubscriber ?? throw new ArgumentNullException(nameof(attackEventSubscriber));
             _disposables = new CompositeDisposable();
 
@@ -30,26 +30,26 @@ namespace Project.Application.Player
 
         public void Attack(Vector3 targetPosition)
         {
-            Framework.Core.CustomLogger.Log($"[PlayerAttackUseCase] Attack called. CanAttack: {_player.CanAttack}");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log($"[PlayerAttackUseCase] Attack called. CanAttack: {_player.CanAttack}");
             if(!_player.CanAttack) 
             {
-                Framework.Core.CustomLogger.Log("[PlayerAttackUseCase] Cannot attack - cooldown or inactive");
+                Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerAttackUseCase] Cannot attack - cooldown or inactive");
                 return;
             }
-            Framework.Core.CustomLogger.Log($"[PlayerAttackUseCase] Calling Player.Attack with target: {targetPosition}");
-            _player.Attack(targetPosition, Domain.Bullet.BulletType.Normal);
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log($"[PlayerAttackUseCase] Calling Player.Attack with target: {targetPosition}");
+            _player.Attack(targetPosition, Project.Domain.Bullet.BulletType.Normal);
         }
 
-        private void OnPlayerAttack(Framework.Core.Events.PlayerAttackEvent attackEvent)
+        private void OnPlayerAttack(Project.Application.Abstractions.Events.PlayerAttackEvent attackEvent)
         {
-            Framework.Core.CustomLogger.Log($"[PlayerAttackUseCase] OnPlayerAttack received. PlayerId: {attackEvent.PlayerId}, MyId: {_player.CharacterId}");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log($"[PlayerAttackUseCase] OnPlayerAttack received. PlayerId: {attackEvent.PlayerId}, MyId: {_player.CharacterId}");
             if(attackEvent.PlayerId != _player.CharacterId) 
             {
-                Framework.Core.CustomLogger.Log("[PlayerAttackUseCase] Attack event not for this player");
+                Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerAttackUseCase] Attack event not for this player");
                 return;
             }
 
-            Framework.Core.CustomLogger.Log("[PlayerAttackUseCase] Creating bullet");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerAttackUseCase] Creating bullet");
             var bullet = _bulletFactory.Create(
                 attackEvent.BulletType,
                 attackEvent.PlayerId,
@@ -57,8 +57,8 @@ namespace Project.Application.Player
                 attackEvent.TargetDirection
             );
 
-            Framework.Core.CustomLogger.Log("[PlayerAttackUseCase] Spawning bullet");
-            _bulletManager.SpawnBullet(bullet);
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerAttackUseCase] Spawning bullet");
+            _bulletSpawner.SpawnBullet(bullet);
         }
 
         public void Dispose()

@@ -7,10 +7,10 @@ namespace Project.Application.Enemy
 {
     public class EnemyMoveUseCase
     {
-        private readonly Project.Game.Enemy.Enemy _enemy;
+        private readonly Project.Domain.Enemy.Enemy _enemy;
         private readonly Presentation.Enemy.EnemyView _enemyView;
 
-        public EnemyMoveUseCase(Project.Game.Enemy.Enemy enemy, Presentation.Enemy.EnemyView enemyView)
+        public EnemyMoveUseCase(Project.Domain.Enemy.Enemy enemy, Presentation.Enemy.EnemyView enemyView)
         {
             _enemy = enemy ?? throw new System.ArgumentException(nameof(enemy));
             _enemyView = enemyView ?? throw new System.ArgumentException(nameof(enemyView));

@@ -17,6 +17,19 @@ namespace Project.Presentation.Player
         private Application.Player.PlayerDamageUseCase _damageUseCase;
         private bool _isInitialized = false;
 
+        public void SetGamePlayInputEnabled(bool enabled)
+        {
+            if(_input == null) return;
+            if(enabled)
+            {
+                _input.Player.Enable();
+            }
+            else
+            {
+                _input.Player.Disable();
+            }
+        }
+
 
         public void Initialize(Application.Player.PlayerMoveUseCase moveUseCase,Application.Player.PlayerAttackUseCase attackUseCase,Application.Player.PlayerDamageUseCase damageUseCase)
         {
@@ -24,18 +37,18 @@ namespace Project.Presentation.Player
             _attackUseCase = attackUseCase;
             _damageUseCase = damageUseCase;
             _isInitialized = true;
-            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] Initialize called - UseCases assigned");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerInputReceiver] Initialize called - UseCases assigned");
         }
 
         private void OnEnable()
         {
-            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] OnEnable called - Creating InputSystem_Actions");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerInputReceiver] OnEnable called - Creating InputSystem_Actions");
             _input = new InputSystem_Actions();
             _input.Enable();
-            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] InputSystem_Actions enabled");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerInputReceiver] InputSystem_Actions enabled");
 
             _input.Player.Attack.started += OnAttackStarted;
-            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] Attack event subscribed");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerInputReceiver] Attack event subscribed");
         }
 
         private void OnDisable()
@@ -62,18 +75,18 @@ namespace Project.Presentation.Player
 
         private void OnAttackStarted(InputAction.CallbackContext context)
         {
-            Framework.Core.CustomLogger.Log("[PlayerInputReceiver] Attack button pressed");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log("[PlayerInputReceiver] Attack button pressed");
             if(_isInitialized && _attackUseCase != null)
             {
                 Vector3 attackDirection = Vector3.up;
                 Vector3 targetPosition = _moveUseCase.GetCurrentPosition() + attackDirection * 10f;
 
-                Framework.Core.CustomLogger.Log($"[PlayerInputReceiver] Calling AttackUseCase.Attack with target: {targetPosition}");
+                Project.Infrastructure.Unity.Logging.UnityLogger.Log($"[PlayerInputReceiver] Calling AttackUseCase.Attack with target: {targetPosition}");
                 _attackUseCase.Attack(targetPosition);
             }
             else
             {
-                Framework.Core.CustomLogger.Log($"[PlayerInputReceiver] AttackUseCase is null: {_attackUseCase == null}, Initialized: {_isInitialized}");
+                Project.Infrastructure.Unity.Logging.UnityLogger.Log($"[PlayerInputReceiver] AttackUseCase is null: {_attackUseCase == null}, Initialized: {_isInitialized}");
             }
         }
 

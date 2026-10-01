@@ -15,17 +15,17 @@ namespace Project.Presentation.Player
         [SerializeField] private Rigidbody2D rb2d;
 
         [Header("Settings")]
-        [SerializeField] private Game.Shared.Character.PlayerConfig playerConfig;
-        public Game.Shared.Character.PlayerConfig PlayerConfig => playerConfig;
-        //[SerializeField] private Domain.Character.CharacterStats defaultStats;
-        //public Domain.Character.CharacterStats DefaultStats => defaultStats;
+        [SerializeField] private Project.Infrastructure.Unity.Config.PlayerConfig playerConfig;
+        public Project.Infrastructure.Unity.Config.PlayerConfig PlayerConfig => playerConfig;
+        //[SerializeField] private Project.Domain.Character.CharacterStats defaultStats;
+        //public Project.Domain.Character.CharacterStats DefaultStats => defaultStats;
 
-        private Game.Player.Player _player;
-        public Game.Player.Player Player => _player;
+        private Project.Domain.Player.Player _player;
+        public Project.Domain.Player.Player Player => _player;
 
         private CompositeDisposable _disposable;
-        private ISubscriber<Framework.Core.Events.PlayerDamageTakenEvent> _damageTakenSubscriber;
-        private ISubscriber<Framework.Core.Events.PlayerStateChangedEvent> _stateChangedSubscriber;
+        private ISubscriber<Project.Application.Abstractions.Events.PlayerDamageTakenEvent> _damageTakenSubscriber;
+        private ISubscriber<Project.Presentation.Events.PlayerStateChangedEvent> _stateChangedSubscriber;
 
         private void Awake()
         {
@@ -35,8 +35,8 @@ namespace Project.Presentation.Player
         }
 
         [Inject]
-        private void Construct(ISubscriber<Framework.Core.Events.PlayerStateChangedEvent> stateChangedSubscriber,
-                                ISubscriber<Framework.Core.Events.PlayerDamageTakenEvent> damageTakenSubscriber)
+        private void Construct(ISubscriber<Project.Presentation.Events.PlayerStateChangedEvent> stateChangedSubscriber,
+                                ISubscriber<Project.Application.Abstractions.Events.PlayerDamageTakenEvent> damageTakenSubscriber)
         {
             _stateChangedSubscriber = stateChangedSubscriber;
             _damageTakenSubscriber = damageTakenSubscriber;
@@ -46,15 +46,15 @@ namespace Project.Presentation.Player
             _disposable.Add(_damageTakenSubscriber.Subscribe(OnDamageTaken));
         }
 
-        public void InitializePlayer(Game.Player.Player player)
+        public void InitializePlayer(Project.Domain.Player.Player player)
         {
             _player = player;
         }
 
-        private void OnStateChanged(Framework.Core.Events.PlayerStateChangedEvent stateEvent)
+        private void OnStateChanged(Project.Presentation.Events.PlayerStateChangedEvent stateEvent)
         {
             string animationName = GetAnimationName(stateEvent.StateName);
-            Framework.Core.CustomLogger.Log($"{stateEvent.StateName}アニメーションを受け取って再生");
+            Project.Infrastructure.Unity.Logging.UnityLogger.Log($"{stateEvent.StateName}アニメーションを受け取って再生");
             //PlayAnimation(animationName);
         }
 
@@ -77,7 +77,7 @@ namespace Project.Presentation.Player
             }
         }
 
-        private void OnDamageTaken(Framework.Core.Events.PlayerDamageTakenEvent damageEvent)
+        private void OnDamageTaken(Project.Application.Abstractions.Events.PlayerDamageTakenEvent damageEvent)
         {
             SetColor(Color.red);
         }
